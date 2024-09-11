@@ -50,6 +50,7 @@ orm.create(
     integer("id", prop("n_null", "pri_key", "uni")),
     varchar("name", 30, prop("n_null")),
     datetime("creation", prop("n_null"))
+)
 ```
 
 Este comando equivale ao comando:
