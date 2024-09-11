@@ -38,6 +38,18 @@ data = {
 orm = MyORM("sqlite", data)
 ```
 
+**É possível ativar o retorno dos comandos SQL**
+
+```python
+MyORM(sql_return=True)
+```
+
+**Também é possível desativar a execução dos comandos**
+
+```python
+MyORM(execute=False)
+```
+
 ____
 
 ## Criar uma tabela no banco de dados

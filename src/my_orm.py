@@ -7,6 +7,7 @@ Classes:
 Methods:
     - MyORM.create(): cria uma tabela no banco de dados caso ela não exista
     - MyORM.execute(): executa comandos SQL
+    - MyORM.show(): retornar todos os atributos da classe
     
 Requirements:
     - from typing import Optional: suporte para tipos opcionais
@@ -26,15 +27,31 @@ class MyORM:
             - __dbs_type (Optional[str]): tipo de banco de dados (ex: SQLite, MySQL...)
             - __dbs_conn_data (Optional[dict]): dados necessários para conectar-se ao banco de dados
             - __dbs_return (Optional[bool]): caso True, retorna o comando SQL gerado
+            - __exe (Optional[bool]): caso True, executa os comandos gerados
             
         Methods:
             - create(table_name: str, *args: str): cria uma tabela sempre que não existir
-            - execute(sql_commands: str, values: Optional[list]=None): executa comandos SQL"""
+            - execute(sql_commands: str, values: Optional[list]=None): executa comandos SQL
+            - show(): retorna os atributos da classe"""
     
-    def __init__(self, dbs_type: Op[str]=None, dbs_connection_data: Op[dict]=None, sql_return: Op[bool]=True):
+    def __init__(self, dbs_type: Op[str]=None, dbs_connection_data: Op[dict]=None, sql_return: Op[bool]=False, execute: Op[bool]=True):
         self.__dbs_type = dbs_type # tipo de banco de dados (SQLite, MySQL...)
         self.__dbs_conn_data = dbs_connection_data # dados para conexão com banco de dados (servidor, user...)
         self.__sql_return = sql_return # verifica se há necessidade de retornar os comandos gerados
+        self.__exe = execute # varifica se é para executar os comandos gerados
+        
+    
+    def show(self):
+        """retorna os atributos da classe"""
+        
+        attributes = {
+            "dbs_type": self.__dbs_type,
+            "dbs_connection_data": self.__dbs_conn_data,
+            "sql_return": self.__sql_return,
+            "execute": self.__exe
+        }
+        
+        return attributes
         
         
     def execute(self, sql_commands: str, values: Op[list]=None):
@@ -42,11 +59,12 @@ class MyORM:
             Args:
                 - sql_commands (str): comandos SQL
                 - values (list): valores que serão adicionados nos comandos SQL. Não são obrigatórios"""
-                
-        with _connect_dbs(self.__dbs_type, self.__dbs_conn_data) as conn:
-            cursor = conn.cursor()
-            cursor.execute(sql_commands)
-            cursor.close()
+        
+        if self.__exe:
+            with _connect_dbs(self.__dbs_type, self.__dbs_conn_data) as conn:
+                cursor = conn.cursor()
+                cursor.execute(sql_commands)
+                cursor.close()
         
         
     def create(self, table_name: str, *args: str) -> str:
