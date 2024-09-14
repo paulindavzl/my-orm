@@ -75,11 +75,47 @@ CREATE TABLE IF NOT EXISTS users(
 )
 ```
 
+___
+
+## Inserir dados na tabela
+**Você pode inserir dados em uma tabela por meio do método _insert_, passando o nome da tabela (_tipo: str_), os valores da coluna (_tipo: list_) e as colunas que onde serão inseridos os dados (_tipo: str_):**
+
+```python
+orm.insert(
+    "users",
+    ["User1", "2024/09/14 13:10:00"],
+    "name", "creation"
+)
+```
+
+Este comando equivale ao comando:
+
+```sql
+INSERT INTO users (name, creation) VALUES (User1, 2024/09/14 13:10:00)
+```
+
+### **Nota: É possível inserir vários registros de uma vez. Para isto, basta passar uma lista registros em _values_:**
+
+```python
+orm.insert(
+    "users",
+    [
+        ["User1", "2024/09/14 13:10:00"], 
+        ["User2", "2024/09/14 13:10:30"]
+    ],
+    "name", "creation"
+)
+```
+
+____
+
+## Executar comandos diretamente
+
 **Você também pode usar comandos SQL diretamente usando o método:**
 
 ```python
 # passe o comando SQL como primeiro parâmetro e possíveis valores como segundo parâmetro
-orm.execute()
+orm.execute("CREATE TABLE table")
 ```
 
 ____
