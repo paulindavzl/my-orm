@@ -17,7 +17,7 @@ Requirements:
 
 from types import ModuleType
 from typing import Type
-from exceptions.errors import type_error, value_error_dbms
+from exceptions.errors_cmd_create import type_error, value_error_dbms
 
 def _import_lib_for(dbs_type: str) -> Type[ModuleType]:
     """importa somente a biblioteca necessária

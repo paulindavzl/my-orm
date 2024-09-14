@@ -20,7 +20,7 @@ Requirements:
     from exceptions.errors import type_error, value_error: importa exceções personalizadas
 """
 
-from exceptions.errors import type_error, value_error
+from exceptions.errors_cmd_create import type_error, value_error
 
 def foreign_key(referrer: str, referenced: str, *args: str) -> str:
     """retorna o comando SQL que define uma chave estrangeira

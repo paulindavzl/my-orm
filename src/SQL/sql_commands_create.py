@@ -22,7 +22,7 @@ Requirements:
 """
 
 
-from exceptions.errors import type_error
+from exceptions.errors_cmd_create import type_error
 
 def integer(col_name: str, *args: str) -> str:
     """retorna um comando para adicionar uma coluna tipo int

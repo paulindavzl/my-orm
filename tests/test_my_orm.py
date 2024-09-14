@@ -24,16 +24,26 @@ FOREIGN KEY (uid) REFERENCES table(id) ON UPDATE CASCADE ON DELETE SET NULL
 def test_method_show():
     """testa o método que retorna os atributos da classe"""
     
-    data = {"url": "./database/sqlite.db"}
+    data = {"url": "test.db"}
     orm = MyORM("sqlite", data, True, False)
     expected_return = {
         "dbs_type": "sqlite",
         "dbs_connection_data": data,
         "sql_return": True,
-        "execute": False
+        "execute": False,
+        "placeholder": "?"
     }
     
     assert orm.show() == expected_return
+    
+
+def test_method_insert():
+    """testa o método para inserir registros na tabela"""
+    
+    orm = MyORM(dbs_type="sqlite", sql_return=True, execute=False)
+    expected_return = """INSERT INTO table (column1, column2) VALUES (?, ?)"""
+    
+    assert orm.insert("table", ["value1", "value2"], "column1", "column2") == expected_return
 
 
 if __name__ == "__main__":
