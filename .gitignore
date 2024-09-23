@@ -3,3 +3,6 @@ __pycache__
 .env
 env
 .pytest_cache
+*.db
+*.db-journal
+*.egg-info

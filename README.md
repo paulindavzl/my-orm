@@ -54,10 +54,10 @@ ____
 
 ## Criar uma tabela no banco de dados
 
-**Você pode criar uma tabela usando método _create()_, passando como primeiro parâmentro o nome da tabela (_tipo: str_) seguida pelas colunas (_tipo: str_):**
+**Você pode criar uma tabela usando método _MyORM.make()_, passando como primeiro parâmentro o nome da tabela (_tipo: str_) seguida pelas colunas (_tipo: str_):**
 
 ```python
-orm.create(
+orm.make(
     "users",
     integer("id", prop("n_null", "pri_key", "uni")),
     varchar("name", 30, prop("n_null")),
@@ -78,10 +78,10 @@ CREATE TABLE IF NOT EXISTS users(
 ___
 
 ## Inserir dados na tabela
-**Você pode inserir dados em uma tabela por meio do método _insert_, passando o nome da tabela (_tipo: str_), os valores da coluna (_tipo: list_) e as colunas que onde serão inseridos os dados (_tipo: str_):**
+**Você pode inserir dados em uma tabela por meio do método _MyORM.add()_, passando o nome da tabela (_tipo: str_), os valores da coluna (_tipo: list_) e as colunas que onde serão inseridos os dados (_tipo: str_):**
 
 ```python
-orm.insert(
+orm.add(
     "users",
     ["User1", "2024/09/14 13:10:00"],
     "name", "creation"
@@ -97,7 +97,7 @@ INSERT INTO users (name, creation) VALUES (User1, 2024/09/14 13:10:00)
 ### **Nota: É possível inserir vários registros de uma vez. Para isto, basta passar uma lista registros em _values_:**
 
 ```python
-orm.insert(
+orm.add(
     "users",
     [
         ["User1", "2024/09/14 13:10:00"], 
@@ -109,20 +109,66 @@ orm.insert(
 
 ____
 
+## Selecionar dados da tabela
+
+**Para selecionar os dados de uma tabela, você pode usar o método _MyORM.get()_, passando o nome da tabela (_tipo: str_), as colunas que serão selecionadas ("all" para todas as colunas, _tipo: str_ / _tipo: list_ para retornar uma coluna específica) e as condições para seleção (_tipo: str_):**
+
+* Retornar todas as colunas:
+
+```python
+orm.get("users", "all", whe_("name", "= 'User1'"))
+```
+
+Este comando equivale ao comando:
+
+```sql
+SELECT * FROM users WHERE name = "User1";
+```
+
+**Por padrão, o retorno deste comando seria uma lista de dicionário:**
+
+```python
+[{"name": "User1", "creation": "2024/09/14 13:10:00"}]
+```
+
+**É possível desativar esta funcionalidade, assim, ele retornará na forma padrão (uma lista com várias listas de dados):**
+
+```python
+orm = MyORM(return_dict=False)
+```
+
+* Retornar coluna(s) específicas:
+
+```python
+orm.get("users", ["name"])
+```
+
+Este comando equivale ao comando:
+
+```sql
+SELECT name FROM users
+```
+
+**O retorno seria:**
+
+```python
+[["User1", "2024/09/14 13:10:00"], ["User2", "2024/09/14 13:10:30"]]
+```
+
+____
+
 ## Executar comandos diretamente
 
 **Você também pode usar comandos SQL diretamente usando o método:**
 
 ```python
 # passe o comando SQL como primeiro parâmetro e possíveis valores como segundo parâmetro
-orm.execute("CREATE TABLE table")
+orm.exe("CREATE TABLE table")
 ```
 
 ____
 
 ## Tipos de dados
-
-### Para usar com MyORM.create():
 
 * **integer** <br>
 Para criar colunas do tipo INTEIRO
@@ -320,3 +366,55 @@ O resultado dessa função seria o equivalente ao comando:
 ```sql
 DEFAULT CURRENT_DATETIME UNIQUE NOT NULL PRIMARY KEY AUTO_INCREMENT
 ```
+
+____
+
+## Condições
+
+* **whe_** <br>
+Para adicionar a condição WHERE
+    * col_name (str): nome da coluna condicionada
+    * *args (str): condição exigida
+
+```python
+whe_(col_name: str, *args: str)
+```
+
+* **betw_** <br>
+Para adicionar uma condição BETWEEN
+    * par1: primeiro parâmetro
+    * par2: segundo parâmetro
+
+```python
+betw_(par1, par2)
+```
+
+OBS: **betw_** deve ser usado como argumento dentro de outra condição (_whe__/_and__/_or__)
+
+* **and_** <br>
+Para adiciona uma condição AND
+    * col_name (str): nome da coluna condicionada
+    * *args (str): condição exigida
+
+```python
+and_(col_name: str, *args: str)
+```
+
+* **or_** <br>
+Para adiciona uma condição OR
+    * col_name (str): nome da coluna condicionada
+    * *args (str): condição exigida
+
+```python
+or_(col_name: str, *args: str)
+```
+
+* **in_** <br>
+Para uma condição IN
+    * *args (str): valores que a coluna deve ter
+
+```python
+in_(*args: str)
+```
+
+OBS: **in_** deve ser usado como argumento dentro de outra condição (_whe__/_and__/_or__)

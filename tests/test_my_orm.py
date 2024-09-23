@@ -1,10 +1,21 @@
 import pytest
 from my_orm import *
 
-def test_method_create():
+
+# dados de conexão
+@pytest.fixture
+def data():
+    return {"url": "test.db"}
+
+
+# instância da classe MyORM
+@pytest.fixture
+def orm(data):
+    return MyORM("sqlite", data, True, False)
+
+def test_method_create(orm):
     """testa o método para criar tabelas"""
     
-    orm = MyORM(sql_return=True, execute=False)
     expected_return = """CREATE TABLE IF NOT EXISTS table(
 column1 INTEGER NOT NULL PRIMARY KEY,
 column2 VARCHAR(25) NOT NULL,
@@ -12,7 +23,7 @@ column3 VARCHAR(15) UNIQUE NOT NULL,
 FOREIGN KEY (uid) REFERENCES table(id) ON UPDATE CASCADE ON DELETE SET NULL
 );"""
     
-    assert orm.create(
+    assert orm.make(
         "table",
         integer("column1", prop("n_null", "pri_key")),
         varchar("column2", 25, prop("n_null")),
@@ -21,11 +32,9 @@ FOREIGN KEY (uid) REFERENCES table(id) ON UPDATE CASCADE ON DELETE SET NULL
     ).get("sql") == expected_return
     
 
-def test_method_show():
+def test_method_show(orm, data):
     """testa o método que retorna os atributos da classe"""
     
-    data = {"url": "test.db"}
-    orm = MyORM("sqlite", data, True, False)
     expected_return = {
         "dbs_type": "sqlite",
         "dbs_connection_data": data,
@@ -37,13 +46,20 @@ def test_method_show():
     assert orm.show() == expected_return
     
 
-def test_method_insert():
+def test_method_insert(orm):
     """testa o método para inserir registros na tabela"""
     
-    orm = MyORM(dbs_type="sqlite", sql_return=True, execute=False)
     expected_return = """INSERT INTO table (column1, column2) VALUES (?, ?)"""
     
-    assert orm.insert("table", ["value1", "value2"], "column1", "column2") == expected_return
+    assert orm.add("table", ["value1", "value2"], "column1", "column2").get("sql") == expected_return
+    
+
+def test_method_select(orm):
+    """testa o método para selecionar registros na tabela"""
+    
+    expected_return = "SELECT * FROM table;"
+    
+    assert orm.get("table", "all").get("sql") == expected_return
 
 
 if __name__ == "__main__":

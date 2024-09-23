@@ -32,11 +32,11 @@ def integer(col_name: str, *args: str) -> str:
             
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "integer")
+        raise type_error("col_name", col_name, "str", "integer")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "integer")
+                raise type_error("*args", arg, "str", "integer")
     
     sql_commands = f"{col_name} INTEGER "
     if args:
@@ -53,11 +53,11 @@ def t_float(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "t_float")
+        raise type_error("col_name", col_name, "str", "t_float")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "t_float")
+                raise type_error("*args", arg, "str", "t_float")
     
     sql_commands = f"{col_name} FLOAT "
     if args:
@@ -76,15 +76,15 @@ def decimal(col_name: str, precision: int, scale: int, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "decimal")
+        raise type_error("col_name", col_name, "str", "decimal")
     elif not isinstance(precision, int):
-        type_error("precision", precision, "int", "decimal")
+        raise type_error("precision", precision, "int", "decimal")
     elif not isinstance(scale, int):
-        type_error("scale", scale, "int", "decimal")
+        raise type_error("scale", scale, "int", "decimal")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "decimal")
+                raise type_error("*args", arg, "str", "decimal")
     
     sql_commands = f"{col_name} DECIMAL({precision}, {scale}) "
     if args:
@@ -102,11 +102,11 @@ def double(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "double")
+        raise type_error("col_name", col_name, "str", "double")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "double")
+                raise type_error("*args", arg, "str", "double")
     
     sql_commands = f"{col_name} DOUBLE "
     if args:
@@ -124,13 +124,13 @@ def char(col_name: str, length: int, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "char")
+        raise type_error("col_name", col_name, "str", "char")
     if not isinstance(length, int):
-        type_error("length", length, "int", "char")
+        raise type_error("length", length, "int", "char")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "char")
+                raise type_error("*args", arg, "str", "char")
     
     sql_commands = f"{col_name} CHAR({length}) "
     if args:
@@ -148,13 +148,13 @@ def varchar(col_name: str, max_length: int, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "varchar")
+        raise type_error("col_name", col_name, "str", "varchar")
     if not isinstance(max_length, int):
-        type_error("max_length", max_length, "int", "varchar")
+        raise type_error("max_length", max_length, "int", "varchar")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "varchar")
+                raise type_error("*args", arg, "str", "varchar")
     
     sql_commands = f"{col_name} VARCHAR({max_length}) "
     if args:
@@ -171,11 +171,11 @@ def text(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "text")
+        raise type_error("col_name", col_name, "str", "text")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "text")
+                raise type_error("*args", arg, "str", "text")
     
     sql_commands = f"{col_name} TEXT "
     if args:
@@ -192,11 +192,11 @@ def boolean(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "boolean")
+        raise type_error("col_name", col_name, "str", "boolean")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "boolean")
+                raise type_error("*args", arg, "str", "boolean")
     
     sql_commands = f"{col_name} BOOLEAN "
     if args:
@@ -215,11 +215,11 @@ def date(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "date")
+        raise type_error("col_name", col_name, "str", "date")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "date")
+                raise type_error("*args", arg, "str", "date")
     
     sql_commands = f"{col_name} DATE "
     if args:
@@ -238,11 +238,11 @@ def datetime(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "datetime")
+        raise type_error("col_name", col_name, "str", "datetime")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "datetime")
+                raise type_error("*args", arg, "str", "datetime")
     
     sql_commands = f"{col_name} DATETIME "
     if args:
@@ -261,11 +261,11 @@ def timestamp(col_name: str, *args: str) -> str:
     
     # trata possíveis erros
     if not isinstance(col_name, str):
-        type_error("col_name", col_name, "str", "timestamp")
+        raise type_error("col_name", col_name, "str", "timestamp")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "timestamp")
+                raise type_error("*args", arg, "str", "timestamp")
     
     sql_commands = f"{col_name} TIMESTAMP "
     if args:

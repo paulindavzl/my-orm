@@ -53,12 +53,12 @@ def _connect_dbs(dbs_type: str, data: dict):
     
     # trata possíveis erros
     if not isinstance(dbs_type, str):
-        type_error("dbs_type", dbs_type, "str", "_connect_dbs")
+        raise type_error("dbs_type", dbs_type, "str", "_connect_dbs")
     elif not isinstance(data, dict):
-        type_error("data", data, "dict", "_connect_dbs")
+        raise type_error("data", data, "dict", "_connect_dbs")
     else:
         if not dbs_type in supported:
-            value_error_dbms(dbs_type, supported)
+            raise value_error_dbms(dbs_type, supported)
     
     dbs_lib = _import_lib_for(dbs_type) # importa a biblioteca necessária
     conn = _connect_in(dbs_type, dbs_lib, data)

@@ -31,15 +31,15 @@ def foreign_key(referrer: str, referenced: str, *args: str) -> str:
             
     # trata possíveis erros
     if not isinstance(referrer, str):
-        type_error("referrer", referrer, "str", "foreign_key")
+        raise type_error("referrer", referrer, "str", "foreign_key")
     elif not isinstance(referenced, str):
-        type_error("referenced", referenced, "str", "foreign_key")
+        raise type_error("referenced", referenced, "str", "foreign_key")
     elif not "(" in referenced or not ")" in referenced:
-        value_error("referenced", referenced, "table(column)", "foreign_key")
+        raise value_error("referenced", referenced, "table(column)", "foreign_key")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                type_error("*args", arg, "str", "foreign_key")
+                raise type_error("*args", arg, "str", "foreign_key")
     
     sql_commands = f"FOREIGN KEY ({referrer}) REFERENCES {referenced} "
     if args:
@@ -53,7 +53,7 @@ def on_up(command: str) -> str:
     
     # trata possíveis erros
     if not isinstance(command, str):
-        type_error("command", command, "str", "on_up")
+        raise type_error("command", command, "str", "on_up")
     
     return f"ON UPDATE {command.upper()}"
     
@@ -63,7 +63,7 @@ def on_del(command: str) -> str:
     
     # trata possíveis erros
     if not isinstance(command, str):
-        type_error("command", command, "str", "on_del")
+        raise type_error("command", command, "str", "on_del")
     
     return f"ON DELETE {command.upper()}"
     
@@ -83,7 +83,7 @@ def prop(*args: str, default=None) -> str:
     # trata possíveis erros
     for arg in args:
         if not isinstance(arg, str):
-            type_error("*args", arg, "str", "prop")
+            raise type_error("*args", arg, "str", "prop")
     
     # comandos SQL abreviados
     abbreviations = {
