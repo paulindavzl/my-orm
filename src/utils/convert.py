@@ -1,6 +1,9 @@
 """
 Este módulo faz a conversão de um tipo de dado para outro
 
+Note:
+    As funções contidas neste módulo não devem ser usadas diretamente pelo usuário
+
 Methods:
     - _to_dict(data: list, keys: list): transforma uma lista em um dicionário
     

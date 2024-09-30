@@ -21,4 +21,4 @@ def value_error(*args):
         Args:
             *args: argumentos que serão comparados"""
     
-    return ValueError(f"(MyORM.add()) The number of values ​({len(args[0])}) does not mean the number of columns ({len(args[1])})!")
+    return ValueError(f"(MyORM.add()) The number of values ​({len(args[0])}) does not mean the number of columns ({len(args[1])})! See the documentation at https://github.com/paulindavzl/my-orm")

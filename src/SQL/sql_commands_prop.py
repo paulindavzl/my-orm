@@ -41,7 +41,7 @@ def foreign_key(referrer: str, referenced: str, *args: str) -> str:
             if not isinstance(arg, str):
                 raise type_error("*args", arg, "str", "foreign_key")
     
-    sql_commands = f"FOREIGN KEY ({referrer}) REFERENCES {referenced} "
+    sql_commands = f"**fkey** FOREIGN KEY ({referrer}) REFERENCES {referenced} "
     if args:
         sql_commands += " ".join(args)
         
@@ -94,7 +94,7 @@ def prop(*args: str, default=None) -> str:
         "n_null": "NOT NULL"
     }
     
-    sql_commands = ""
+    sql_commands = "**prop** "
     
     # verifica se existe um valor padrão
     if default != None:
