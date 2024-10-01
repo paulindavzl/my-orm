@@ -21,15 +21,10 @@ def _get_tags_to(funct: str) -> tuple:
     data_types = ["**int**", "**float**", "**dec**", "**doub**", "**char**", "**vchar**", "**txt**", "**bool**", "**date**", "**dtime**", "**tstamp**", "**fkey**", "**prop**"]
     
     tags = {
-        "create": [
-            "**make**"
-        ],
-        "insert": [
-            "**add**"
-        ],
-        "select": [
-            "**get**"
-        ],
+        "create": ["**make**"],
+        "insert": ["**add**"],
+        "select": ["**get**"],
+        "update": ["**edit**"],
         "conds": conds,
         "data_types": data_types
     }
@@ -107,7 +102,6 @@ def _requirements_tags(cmd, type):
         other_types = _get_other_types(cmd)
         for type in other_types:
             if type not in cmd:
-                print(type)
                 return {"result": False}
         
     else:

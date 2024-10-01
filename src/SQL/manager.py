@@ -29,38 +29,29 @@ def _import_lib_for(dbs_type: str) -> Type[ModuleType]:
         return sqlite3
 
 
-def _connect_in(dbs_type: str, dbs_lib: Type[ModuleType], data: dict):
+def _connect_in(data: dict, dbs_lib: Type[ModuleType]):
     """realiza de fato a conexão com o banco de dados
         Args:
             - dbs_type (str): informa qual será o banco de dados usado
             - dbs_lib (module): biblioteca usada para realiza a conexão com o banco de dados
             - data (dict): dicionário com os dados necessários para realizar a conexão com o banco de dados"""
     
-    if dbs_type == "sqlite":
+    if data.get("dbs") == "sqlite":
         conn = dbs_lib.connect(data.get("url"), check_same_thread=False)
         
         return conn
 
 
-def _connect_dbs(dbs_type: str, data: dict):
+def _connect_dbs(data: dict):
     """gerencia a conexão com o banco de dados
         Args:
             - dbs_type (str): informa qual será o banco de dados usado
             - data (dict): dicionário com os dados necessários para realizar a conexão com o banco de dados"""
     
-    # SGDBs suportados
-    supported = ["sqlite"]
-    
-    # trata possíveis erros
-    if not isinstance(dbs_type, str):
-        raise type_error("dbs_type", dbs_type, "str", "_connect_dbs")
-    elif not isinstance(data, dict):
+    if not isinstance(data, dict):
         raise type_error("data", data, "dict", "_connect_dbs")
-    else:
-        if not dbs_type in supported:
-            raise value_error_dbms(dbs_type, supported)
     
-    dbs_lib = _import_lib_for(dbs_type) # importa a biblioteca necessária
-    conn = _connect_in(dbs_type, dbs_lib, data)
+    dbs_lib = _import_lib_for(data.get("dbs")) # importa a biblioteca necessária
+    conn = _connect_in(data, dbs_lib)
     
     return conn

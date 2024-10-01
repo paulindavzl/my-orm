@@ -29,13 +29,13 @@ from SQL.sql_commands_cond import *
 from SQL.manager import _connect_dbs
 from utils.convert import _to_dict
 from utils.verify_tags import _requirements_tags as _req_tags, _remove_tags
+from utils.validate import _is_valid_dbs_data
 from exceptions import errors_method_insert as err_add, errors_method_create as err_make, errors_method_select as err_get, errors_method_update as err_edit
 
 class MyORM:
     """classe geral da ORM, gerencia todos os métodos
         Attributes:
-            - __dbs_type (Optional[str]): tipo de banco de dados (ex: SQLite, MySQL...)
-            - __dbs_conn_data (Optional[dict]): dados necessários para conectar-se ao banco de dados
+            - __dbs_data: dados do banco de dados
             - __ret_sql (Optional[bool]): caso True, retorna o comando SQL gerado
             - __exe (Optional[bool]): caso True, executa os comandos gerados
             - __req_tag (Optional[bool]): quando ativo, garante que os comandos foram gerados por funções internas
@@ -48,9 +48,8 @@ class MyORM:
             - show(): retorna os atributos da classe
             - cols_name(table_name: str): retorna o nome das colunas de uma tabela"""
     
-    def __init__(self, dbs_type: Op[str]=None, dbs_connection_data: Op[dict]=None, sql_return: Op[bool]=False, execute: Op[bool]=True, return_dict: Op[bool]=True, require_tags: Op[bool]=True):
-        self.__dbs_type = dbs_type # tipo de banco de dados (SQLite, MySQL...)
-        self.__dbs_conn_data = dbs_connection_data # dados para conexão com banco de dados (servidor, user...)
+    def __init__(self, sql_return: Op[bool]=False, execute: Op[bool]=True, return_dict: Op[bool]=True, require_tags: Op[bool]=True, **dbs_data):
+        self.__dbs_data = dbs_data # dados do banco de dados
         self.__ret_sql = sql_return # verifica se há necessidade de retornar os comandos gerados
         self.__exe = execute # varifica se é para executar os comandos gerados
         self.__req_tags = require_tags # quando ativo, aceita somente comandos com tags
@@ -60,15 +59,14 @@ class MyORM:
             "sqlite": "?",
             "postgresql": "%s",
             "mysql": "%s"
-        }.get(self.__dbs_type)
+        }.get(self.__dbs_data.get("dbs", "sqlite"))
         
     
     def show(self):
         """retorna os atributos da classe"""
         
         attributes = {
-            "dbs_type": self.__dbs_type,
-            "dbs_connection_data": self.__dbs_conn_data,
+            "dbs_data": self.__dbs_data,
             "sql_return": self.__ret_sql,
             "execute": self.__exe,
             "placeholder": self.__placeholder,
@@ -78,14 +76,21 @@ class MyORM:
         return attributes
         
         
-    def exe(self, sql_commands: str, values: Op[list]=None, type_exe="unique", require_tags=False):
+    def exe(self, sql_commands: str, values: Op[list]=None, type_exe="unique", require_tags=None):
         """executa comandos SQL
             Args:
                 - sql_commands (str): comandos SQL
                 - values (list): valores que serão adicionados nos comandos SQL. Não são obrigatórios
                 - require_tags (bool): ativa ou desativa a verificação de tags manualmente"""
         
+        if require_tags == None:
+            require_tags = self.__req_tags
+        
         if self.__exe:
+            
+            result = _is_valid_dbs_data(self.__dbs_data)
+            if not result.get("result"):
+                raise ValueError(f"Some information is missing to connect to the database ({result.get('missing')}). See the documentation at https://github.com/paulindavzl/my-orm")
             
             # garante que tenha as tags necessárias caso ativa
             is_safe = self.__verify_tags(sql_commands, require_tags)
@@ -94,7 +99,7 @@ class MyORM:
             else:
                 raise ValueError("This SQL command is not valid as it does not have security tags!")
             
-            with _connect_dbs(self.__dbs_type, self.__dbs_conn_data) as conn:
+            with _connect_dbs(self.__dbs_data) as conn:
                 cursor = conn.cursor()
                 try:
                     resp = None
@@ -136,7 +141,7 @@ class MyORM:
         sql_commands = f"**make** CREATE TABLE IF NOT EXISTS {table_name}({values});"
         
         # tenta executar os comandos SQL
-        self.exe(sql_commands, require_tags=self.__req_tags)
+        self.exe(sql_commands)
         
         if self.__ret_sql:
             return {"sql": _remove_tags(sql_commands)}
@@ -196,7 +201,7 @@ class MyORM:
             return {"sql": sql_commands}
             
         
-    def get(self, table_name: str, columns: list, *args: Op[str], in_dict=True):
+    def get(self, table_name: str, columns: Op[list]="all", *args: Op[str], in_dict=True):
         """retorna dados de um banco de dados
             Args:
                 table_name (str): nome da tabela
@@ -221,7 +226,7 @@ class MyORM:
             col = ", ".join(columns)
         
         cond = " "+" ".join(args)
-        sql_commands = f"**get**SELECT {col} FROM {table_name}{cond}".strip() + ";"
+        sql_commands = f"**get** SELECT {col} FROM {table_name}{cond}".strip() + ";"
         
         result = {}
         if self.__exe:
@@ -251,7 +256,7 @@ class MyORM:
         if not isinstance(table_name, str):
             raise TypeError("(cols_name()) table_name requires a string")
             
-        resp = self.exe(f"PRAGMA table_info({table_name});").fetchall()
+        resp = self.exe(f"PRAGMA table_info({table_name});", require_tags=False).fetchall()
         
         columns = []
         for column in resp:
