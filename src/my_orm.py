@@ -1,27 +1,3 @@
-"""
-Este módulo realiza a conexão com um banco de dados e facilita a manipulação de comandos SQL!
-
-Classes:
-    - MyORM: classe responsável por gerenciar a conexão com bancos de dados e fornecer métodos para manipulação de comandos SQL
-    
-Methods:
-    - MyORM.make(): cria uma tabela no banco de dados caso ela não exista
-    - MyORM.add(): insere valores em uma tabela
-    - MyORM.get(): retorna registros de uma tabela
-    - MyORM.exe(): executa comandos SQL
-    - MyORM.show(): retornar todos os atributos da classe
-    
-Requirements:
-    - from typing import Optional: suporte para tipos opcionais
-    - from SQL.sql_commands_create import *: funções para criar tabelas
-    - from SQL.sql_commands_prop import *: funções para adicionar propriedades nas tabelas
-    - from SQL.sql_commands_cond import *: funções para condicionar consultas
-    - from SQL.manager import _connect_dbs: função para conectar-se ao banco de dados 
-    - from utils.convert import _to_dict: função que converte dados em listas
-    - from utils.verify_tags import _requirements_tags, _remove_tags: importa funções relacionadas às tags
-    - from exceptions import errors_method_insert, errors_method_create, errors_method_select: importa os erros personalizados de cada função
-"""
-
 from typing import Optional as Op
 from SQL.sql_commands_create import *
 from SQL.sql_commands_prop import *
@@ -30,29 +6,16 @@ from SQL.manager import _connect_dbs
 from utils.convert import _to_dict
 from utils.verify_tags import _requirements_tags as _req_tags, _remove_tags
 from utils.validate import _is_valid_dbs_data
-from exceptions import errors_method_insert as err_add, errors_method_create as err_make, errors_method_select as err_get, errors_method_update as err_edit
+from exceptions import errors_method_insert as err_add, errors_method_create as err_make, errors_method_select as err_get, errors_method_update as err_edit, errors_method_delete as err_remove
 
 class MyORM:
-    """classe geral da ORM, gerencia todos os métodos
-        Attributes:
-            - __dbs_data: dados do banco de dados
-            - __ret_sql (Optional[bool]): caso True, retorna o comando SQL gerado
-            - __exe (Optional[bool]): caso True, executa os comandos gerados
-            - __req_tag (Optional[bool]): quando ativo, garante que os comandos foram gerados por funções internas
-            
-        Methods:
-            - make(table_name: str, *args: str): cria uma tabela sempre que não existir
-            - add(self, table_name: str, values: list, *args: str): insere registros em uma tabela
-            - get(self, table_name: str, columns: list, ret_dict: Op[dict]=True, *args: Op[str]): retorna dados de uma tabela
-            - exe(sql_commands: str, values: Optional[list]=None): executa comandos SQL
-            - show(): retorna os atributos da classe
-            - cols_name(table_name: str): retorna o nome das colunas de uma tabela"""
     
-    def __init__(self, sql_return: Op[bool]=False, execute: Op[bool]=True, return_dict: Op[bool]=True, require_tags: Op[bool]=True, **dbs_data):
+    def __init__(self, sql_return: Op[bool]=False, execute: Op[bool]=True, return_dict: Op[bool]=True, require_tags: Op[bool]=True, alter_all: Op[bool]=False, **dbs_data):
         self.__dbs_data = dbs_data # dados do banco de dados
         self.__ret_sql = sql_return # verifica se há necessidade de retornar os comandos gerados
         self.__exe = execute # varifica se é para executar os comandos gerados
         self.__req_tags = require_tags # quando ativo, aceita somente comandos com tags
+        self.__alter_all = alter_all # quando False impeder alterar dados sem condições
         
         # define qual será o placeholder usado para diferentes bancos de dados
         self.__placeholder = {
@@ -62,9 +25,7 @@ class MyORM:
         }.get(self.__dbs_data.get("dbs", "sqlite"))
         
     
-    def show(self):
-        """retorna os atributos da classe"""
-        
+    def show(self):   
         attributes = {
             "dbs_data": self.__dbs_data,
             "sql_return": self.__ret_sql,
@@ -77,17 +38,10 @@ class MyORM:
         
         
     def exe(self, sql_commands: str, values: Op[list]=None, type_exe="unique", require_tags=None):
-        """executa comandos SQL
-            Args:
-                - sql_commands (str): comandos SQL
-                - values (list): valores que serão adicionados nos comandos SQL. Não são obrigatórios
-                - require_tags (bool): ativa ou desativa a verificação de tags manualmente"""
-        
         if require_tags == None:
             require_tags = self.__req_tags
         
         if self.__exe:
-            
             result = _is_valid_dbs_data(self.__dbs_data)
             if not result.get("result"):
                 raise ValueError(f"Some information is missing to connect to the database ({result.get('missing')}). See the documentation at https://github.com/paulindavzl/my-orm")
@@ -121,12 +75,7 @@ class MyORM:
                 cursor.close()
                 
    
-    def make(self, table_name: str, **kwargs):
-        """cria uma tabela sempre que não existir no banco de dado
-            Args:
-                - table_name (str): nome da tabela que será criada
-                - **kwargs: colunas da tabela"""
-        
+    def make(self, table_name: str, **kwargs): 
         # garante que table_name seja uma string
         if not isinstance(table_name, str):
             raise err_make.type_error("table_name", table_name, "str")
@@ -145,14 +94,9 @@ class MyORM:
         
         if self.__ret_sql:
             return {"sql": _remove_tags(sql_commands)}
-            
+           
     
     def add(self, table_name: str, **kwargs) -> str:
-        """insere valores em uma tabela
-            Args:
-                - table_name (str): nome da tabela onde será inserido
-                - **kwargs: colunas e valores que serão adicionados"""
-        
         # garante que table_name seja uma string
         if not isinstance(table_name, str):
             raise err_add.type_error("table_name", table_name, "str")
@@ -202,12 +146,6 @@ class MyORM:
             
         
     def get(self, table_name: str, columns: Op[list]="all", *args: Op[str], in_dict=True):
-        """retorna dados de um banco de dados
-            Args:
-                table_name (str): nome da tabela
-                columns (list): colunas que serão retornadas
-                *args (str): parâmetros extras usados na seleção"""
-        
         # garante que table_name seja uma string
         if not isinstance(table_name, str):
             raise err_get.type_error("table_name", table_name, "str")
@@ -249,10 +187,6 @@ class MyORM:
         
     
     def cols_name(self, table_name: str):
-        """retorna o nome de todas as colunas de uma tabela
-            Args:
-                table_name (str): nome da tabela"""
-                
         if not isinstance(table_name, str):
             raise TypeError("(cols_name()) table_name requires a string")
             
@@ -265,12 +199,9 @@ class MyORM:
         return {"resp": columns}
         
     
-    def edit(self, table_name: str, *args, **kwargs):
-        """atualiza um dado no tabela usando o comando UPDATE
-            Args:
-                table_name (str): nome da tabela
-                *args (str): condições para consulta e atualização
-                **kwargs (str): colunas = valores"""
+    def edit(self, table_name: str, *args, all: Op[bool]=None, **kwargs):
+        if all == None:
+            all = self.__alter_all
                 
         #garante que table_name seja str
         if not isinstance(table_name, str):
@@ -280,6 +211,10 @@ class MyORM:
         for arg in args:
             if not isinstance(arg, str):
                 raise err_edit.type_error("*args", arg, "str")
+                
+        # garante que all seja booleano
+        if not isinstance(all, bool):
+            raise err_edit.type_error("all", all, "bool")
         
         # garante que kwargs seja dict
         if not isinstance(kwargs, dict):
@@ -295,6 +230,8 @@ class MyORM:
         sql_commands = f"**edit** UPDATE {table_name} SET {setter}{cond.strip()};"
         
         if self.__exe:
+            if not "WHERE" in sql_commands and not all:
+                raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
             self.exe(sql_commands)
         
         if self.__ret_sql:
@@ -302,17 +239,13 @@ class MyORM:
     
     
     def __verify_tags(self, cmd: str, require_tags):
-        """verifica se o comando possui as tags exigidas para evitar Injeção de SQL (caso o atributo __req_tags=True)
-            Args:
-                cmd (str): comando que será executado"""
-        
         types = ["SELECT", "CREATE", "DELETE", "UPDATE", "INSERT"]
         
         # caso o atributo require_tags=True
         if require_tags:
             cmd_type = None
             for type in types:
-                if type in cmd[:15]:
+                if type in cmd[:15] or type in cmd[10:17]:
                     cmd_type = type.lower()
             
             if cmd_type == None:
@@ -325,6 +258,32 @@ class MyORM:
             return {"result": False}
         else:
             return {"result": True, "cmd": _remove_tags(cmd)}
+            
+    
+    def remove(self, table_name: str, *args: str, all: Op[bool]=None):
+        if all == None:
+            all = self.__alter_all
+        
+        if not isinstance(table_name, str):
+            raise err_remove.type_error("table_name", table_name, "str")
+        elif not isinstance(all, bool):
+            raise err_remove.type_error("all", all, "bool")
+        else:
+            for arg in args:
+                if not isinstance(arg, str):
+                    raise err_remove.type_error("*args", arg, "str")
+            
+        
+        cond = " ".join(args)
+        sql_command = f"**remove** DELETE FROM {table_name} {cond}"
+        
+        if self.__exe:
+            if not "WHERE" in sql_command and not all:
+                raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
+            self.exe(sql_command)
+                
+        if self.__ret_sql:
+            return {"sql": sql_command}
     
 
 # ignore

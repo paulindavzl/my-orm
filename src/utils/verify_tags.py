@@ -25,6 +25,7 @@ def _get_tags_to(funct: str) -> tuple:
         "insert": ["**add**"],
         "select": ["**get**"],
         "update": ["**edit**"],
+        "delete": ["**remove**"],
         "conds": conds,
         "data_types": data_types
     }
@@ -102,11 +103,12 @@ def _requirements_tags(cmd, type):
         other_types = _get_other_types(cmd)
         for type in other_types:
             if type not in cmd:
+                print(1)
                 return {"result": False}
         
     else:
         if not _have_tag(cmd, tags):
+            print(2)
             return {"result": False}
     return {"result": True, "cmd": _remove_tags(cmd)}
     
-
