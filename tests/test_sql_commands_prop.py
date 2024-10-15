@@ -19,32 +19,32 @@ def get_errors(error: str, *args) -> str:
 def test_foreign_key():
     """testa a função que gera o comando FOREIGN KEY do SQL"""
     
-    foreign_key_return = "FOREIGN KEY (id) REFERENCES people(uid) ON UPDATE CASCADE ON DELETE SET NULL"
-    assert foreign_key("id", "people(uid)", on_up("cascade"), on_del("set null")) == foreign_key_return
+    foreign_key_return = "**fkey** FOREIGN KEY (id) REFERENCES people(uid) ON UPDATE CASCADE ON DELETE SET NULL"
+    assert for_key("id", "people(uid)", on_up("cascade"), on_del("set null")) == foreign_key_return
     
 
 def test_foreign_key_invalid_referrer():
     """testa adicionar um valor diferente de str em referrer"""
     
-    error_referrer = re.escape(get_errors("TypeError", "referrer", 0, "str", "foreign_key"))
+    error_referrer = re.escape(get_errors("TypeError", "referrer", 0, "str", "for_key"))
     with pytest.raises(TypeError, match = error_referrer):
-        foreign_key(0, "people(uid)", on_up("cascade"), on_del("set null"))
+        for_key(0, "people(uid)", on_up("cascade"), on_del("set null"))
         
         
 def test_foreign_key_invalid_referenced_type():
     """testa adicionar um valor diferente de str em referenced"""
     
-    error_referenced = re.escape(get_errors("TypeError", "referenced", 0, "str", "foreign_key"))
+    error_referenced = re.escape(get_errors("TypeError", "referenced", 0, "str", "for_key"))
     with pytest.raises(TypeError, match = error_referenced):
-        foreign_key("id", 0, on_up("cascade"), on_del("set null"))
+        for_key("id", 0, on_up("cascade"), on_del("set null"))
         
 
 def test_foreign_key_invalid_referenced_value():
     """testa adicionar um valor diferente do esperado em referenced"""
     
-    error_referenced = re.escape(get_errors("ValueError", "referenced", "uid", "table(column)", "foreign_key"))
+    error_referenced = re.escape(get_errors("ValueError", "referenced", "uid", "table(column)", "for_key"))
     with pytest.raises(ValueError, match = error_referenced):
-        foreign_key("id", "uid", on_up("cascade"), on_del("set null"))
+        for_key("id", "uid", on_up("cascade"), on_del("set null"))
         
 
 def test_on_up():
@@ -80,42 +80,42 @@ def test_on_del_invalid_command():
 def test_prop_default():
     """testa a função que gera a propriedade DEFAULT do SQL"""
     
-    prop_return = "DEFAULT 0"
+    prop_return = "**prop** DEFAULT 0"
     assert prop(default=0) == prop_return
 
 
 def test_prop_default_current():
     """testa a função que gera a propriedade DEFAULT CURRENT_TIMESTAMP do SQL"""
     
-    prop_return = "DEFAULT CURRENT_TIMESTAMP"
+    prop_return = "**prop** DEFAULT CURRENT_TIMESTAMP"
     assert prop(default="current") == prop_return
     
 
 def test_prop_uni():
     """testa a função que gera a propriedade UNIQUE do SQL"""
     
-    prop_return = "UNIQUE"
+    prop_return = "**prop** UNIQUE"
     assert prop("uni") == prop_return
     
 
 def test_prop_n_null():
     """testa a função que gera a propriedade NOT NULL do SQL"""
     
-    prop_return = "NOT NULL"
+    prop_return = "**prop** NOT NULL"
     assert prop("n_null") == prop_return
     
 
 def test_prop_pri_key():
     """testa a função que gera a propriedade PRIMARY KEY do SQL"""
     
-    prop_return = "PRIMARY KEY"
+    prop_return = "**prop** PRIMARY KEY"
     assert prop("pri_key") == prop_return
     
 
 def test_prop_auto():
     """testa a função que gera a propriedade AUTO_INCREMENT do SQL"""
     
-    prop_return = "AUTO_INCREMENT"
+    prop_return = "**prop** AUTO_INCREMENT"
     assert prop("auto") == prop_return
 
 

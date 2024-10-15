@@ -31,7 +31,8 @@ class MyORM:
             "sql_return": self.__ret_sql,
             "execute": self.__exe,
             "placeholder": self.__placeholder,
-            "require_tags": self.__req_tags
+            "require_tags": self.__req_tags,
+            "alter_all": self.__alter_all
         }
         
         return attributes
@@ -76,21 +77,35 @@ class MyORM:
                 
    
     def make(self, table_name: str, **kwargs): 
-        # garante que table_name seja uma string
         if not isinstance(table_name, str):
             raise err_make.type_error("table_name", table_name, "str")
             
+        fkey = kwargs.get("f_key")
+        kwargs.pop("f_key")
+        if fkey != None and not isinstance(fkey, tuple):
+            raise err_make.type_error("f_key", fkey, "tuple")
+        elif fkey != None and len(fkey) < 2:
+            raise err_make.value_error("f_key", fkey, "2 or more")
+            
+        f_key = None
+        if fkey != None:
+            f_key = for_key(
+                fkey[0], 
+                fkey[1], 
+                fkey[2] if len(fkey) >= 3 else "", 
+                fkey[3] if len(fkey) >= 4 else ""
+            )
         cols = []
         for key in kwargs:
             col = key + " " + " ".join(kwargs[key])
             cols.append(col)
             
         values = ", ".join(cols)
-        
-        sql_commands = f"**make** CREATE TABLE IF NOT EXISTS {table_name}({values});"
+        sql_commands = f"**make** CREATE TABLE IF NOT EXISTS {table_name}({values}){' '+f_key if f_key != None else ''};"
         
         # tenta executar os comandos SQL
-        self.exe(sql_commands)
+        if self.__exe:
+            self.exe(sql_commands)
         
         if self.__ret_sql:
             return {"sql": _remove_tags(sql_commands)}
@@ -200,23 +215,18 @@ class MyORM:
         
     
     def edit(self, table_name: str, *args, all: Op[bool]=None, **kwargs):
+        # o atributo all impede que todos os dados sejam editados de uma vez, desde que all=True
+        
         if all == None:
             all = self.__alter_all
-                
-        #garante que table_name seja str
+            
         if not isinstance(table_name, str):
             raise err_edit.type_error("table_name", table_name, "str")
-            
-        # garante que *args seja str
         for arg in args:
             if not isinstance(arg, str):
                 raise err_edit.type_error("*args", arg, "str")
-                
-        # garante que all seja booleano
         if not isinstance(all, bool):
             raise err_edit.type_error("all", all, "bool")
-        
-        # garante que kwargs seja dict
         if not isinstance(kwargs, dict):
             raise err_edit.value_error(kwargs)
         
@@ -227,11 +237,12 @@ class MyORM:
         
         cond = " "+" ".join(args)
         
-        sql_commands = f"**edit** UPDATE {table_name} SET {setter}{cond.strip()};"
+        sql_commands = f"**edit** UPDATE {table_name} SET {setter} {cond.strip()};"
+        
+        if not "WHERE" in sql_commands and not all:
+            raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
         
         if self.__exe:
-            if not "WHERE" in sql_commands and not all:
-                raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
             self.exe(sql_commands)
         
         if self.__ret_sql:
@@ -261,6 +272,8 @@ class MyORM:
             
     
     def remove(self, table_name: str, *args: str, all: Op[bool]=None):
+        # o atributo all impede que todos os dados sejam editados de uma vez, desde que all=True
+        
         if all == None:
             all = self.__alter_all
         
@@ -275,11 +288,12 @@ class MyORM:
             
         
         cond = " ".join(args)
-        sql_command = f"**remove** DELETE FROM {table_name} {cond}"
+        sql_command = f"**remove** DELETE FROM {table_name} {cond};"
+        
+        if not "WHERE" in sql_command and not all:
+            raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
         
         if self.__exe:
-            if not "WHERE" in sql_command and not all:
-                raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
             self.exe(sql_command)
                 
         if self.__ret_sql:
