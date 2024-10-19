@@ -1,24 +1,6 @@
-"""
-Este módulo verifica se um comando possui as tags exigidas
-
-Note:
-    As funções contidas neste módulo são de uso interno e não devem usadas pelo usuário
-    
-Functions:
-    - _get_tags_to(funct: str): retorna as tags de acordo com a função
-    - _remove_tags(cmd: str): retorna um comando sem as tags
-    - _have_tag(cmd: str, tags: list): verifica se possui as tags passadas em uma lista
-    - _get_other_types(cmd: str): obtém outros tipo de funções
-    - _requirements_tags(cmd: str, type: str): agrupas todas a funcionalidades e verifica se possui as tags
-"""
-
-def _get_tags_to(funct: str) -> tuple:
-    """retorna todas as tags de acordo com nome da função
-        Args:
-            funct (str): nome da função relacionada as tags"""
-    
+def _get_tags_to(funct: str):
     conds = ["**whe**", "**betw**", "**and**", "**in**", "**or**"]
-    data_types = ["**int**", "**float**", "**dec**", "**doub**", "**char**", "**vchar**", "**txt**", "**bool**", "**date**", "**dtime**", "**tstamp**", "**fkey**", "**prop**"]
+    data_types = ["**int**", "**float**", "**dec**", "**doub**", "**char**", "**vchar**", "**txt**", "**bool**", "**date**", "**dtime**", "**tstamp**", "**fkey**", "**prop**", "**alter_add**", "**drop**", "**ren_column**", "**rename**", "**alt_col**"]
     
     tags = {
         "create": ["**make**"],
@@ -27,7 +9,8 @@ def _get_tags_to(funct: str) -> tuple:
         "update": ["**edit**"],
         "delete": ["**remove**"],
         "conds": conds,
-        "data_types": data_types
+        "data_types": data_types,
+        "alter table": ["**altab**"]
     }
     
     response = []
@@ -41,10 +24,6 @@ def _get_tags_to(funct: str) -> tuple:
     
     
 def _remove_tags(cmd):
-    """remove as tags do comando e retorna-o sem tag
-        Args:
-            cmd (str): comando com tags"""
-    
     tags = _get_tags_to("all")
     for tag in tags:
         cmd = cmd.replace(tag+" ", "")
@@ -53,11 +32,6 @@ def _remove_tags(cmd):
     
     
 def _have_tag(cmd: str, tags: list):
-    """Verifica se a tag existe no comando
-        Args:
-            cmd (str): comando
-            tags (list): lista de tags"""
-    
     for tag in tags:
         if tag in cmd:
             return True
@@ -65,10 +39,6 @@ def _have_tag(cmd: str, tags: list):
     
     
 def _get_other_types(cmd: str):
-    """verifica, agrupa e retorna os outros tipos de dado do comando
-        Args:
-            -cmd (str): comando analizado"""
-            
     types = {
         " INTEGER ": "**int**", " FLOAT ": "**float**", " DECIMAL(": "**dec**",
         " DOUBLE ": "**doub**", " CHAR(": "**char**", " VARCHAR(": "**vchar**",
@@ -77,7 +47,10 @@ def _get_other_types(cmd: str):
         " BETWEEN": "**betw**", " AND ": "**and**", " OR ": "**or**", 
         " IN ": "**in**", " FOREIGN KEY ": "**fkey**", " AUTO_INCREMENT ": "**prop**",
         " CURRENT_TIMESTAMP ": "**prop**", " PRIMARY_KEY ": "**prop**",
-        " UNIQUE ": "**prop**", " NOT NULL ": "**prop**", " DEFAULT ": "**prop**"
+        " UNIQUE ": "**prop**", " NOT NULL ": "**prop**", " DEFAULT ": "**prop**",
+        "ADD": "**alter_add**", "DROP COLUMN": "**drop**", 
+        "ALTER COLUMN": "**alt_col**", "RENAME COLUMN": "**ren_col**", 
+        "RENAME TO": "**rename**"
     }
     
     list_types = []
@@ -88,13 +61,8 @@ def _get_other_types(cmd: str):
 
 
 def _requirements_tags(cmd, type):
-    """organiza a verificação das tags exigidas
-        Args:
-            cmd (str): comando analisado
-            type (str): tipo de função que gerou o comando"""
-            
     tags = _get_tags_to(type)
-    methods = ["create", "insert", "select", "update", "delete"]
+    methods = ["create", "insert", "select", "update", "delete", "alter table"]
     
     if type in methods:
         if not cmd.startswith(tags[0]):
@@ -103,12 +71,10 @@ def _requirements_tags(cmd, type):
         other_types = _get_other_types(cmd)
         for type in other_types:
             if type not in cmd:
-                print(1)
                 return {"result": False}
         
     else:
         if not _have_tag(cmd, tags):
-            print(2)
             return {"result": False}
     return {"result": True, "cmd": _remove_tags(cmd)}
     

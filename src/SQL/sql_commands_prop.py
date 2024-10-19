@@ -19,39 +19,21 @@ def for_key(referrer: str, referenced: str, *args: str) -> str:
     return sql_commands.strip()
     
 
-def on_up(command: str) -> str:
-    """retorna o comando SQL para ON UPDATE"""
-    
-    # trata possíveis erros
+def on_up(command: str):
     if not isinstance(command, str):
         raise type_error("command", command, "str", "on_up")
     
     return f"ON UPDATE {command.upper()}"
     
     
-def on_del(command: str) -> str:
-    """retorna o comando SQL para ON DELETE"""
-    
-    # trata possíveis erros
+def on_del(command: str):
     if not isinstance(command, str):
         raise type_error("command", command, "str", "on_del")
     
     return f"ON DELETE {command.upper()}"
     
     
-def prop(*args: str, default=None) -> str:
-    """outras propriedades que podem ser abreviadas
-        Args:
-            *args (str): propriedades abreviadas
-                Examples:
-                    auto -> AUTO_INCREMENT
-                    current -> CURRENT_TIMESTAMP
-                    pri_key -> PRIMARY KEY
-                    uni -> UNIQUE
-                    n_null -> NOT NULL
-            default: DEFAULT valor padrão de uma coluna"""
-    
-    # trata possíveis erros
+def prop(*args: str, default=None):
     for arg in args:
         if not isinstance(arg, str):
             raise type_error("*args", arg, "str", "prop")

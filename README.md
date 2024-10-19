@@ -146,4 +146,8 @@ orm.get(
 
 **Veja mais sobre WHERE (whe_()) em [`Condições`](#Condições)**
 
+<<<<<<< HEAD
 ____
+=======
+____
+>>>>>>> 54ad9bd (new method: MyORM.alter_table and new functions)

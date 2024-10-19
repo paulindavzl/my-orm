@@ -1,8 +1,14 @@
+import webbrowser
+from time import sleep
+from os import system
+from random import uniform
 from typing import Optional as Op
 from SQL.sql_commands_create import *
 from SQL.sql_commands_prop import *
 from SQL.sql_commands_cond import *
+from SQL.sql_commands_alter_table import *
 from SQL.manager import _connect_dbs
+from utils import doc_link
 from utils.convert import _to_dict
 from utils.verify_tags import _requirements_tags as _req_tags, _remove_tags
 from utils.validate import _is_valid_dbs_data
@@ -45,47 +51,41 @@ class MyORM:
         if self.__exe:
             result = _is_valid_dbs_data(self.__dbs_data)
             if not result.get("result"):
-                raise ValueError(f"Some information is missing to connect to the database ({result.get('missing')}). See the documentation at https://github.com/paulindavzl/my-orm")
+                raise ValueError(f"Some information is missing to connect to the database ({result.get('missing')}). {doc_link()}")
             
             # garante que tenha as tags necessárias caso ativa
             is_safe = self.__verify_tags(sql_commands, require_tags)
             if is_safe.get("result", False):
                 sql_commands = is_safe.get("cmd")
             else:
-                raise ValueError("This SQL command is not valid as it does not have security tags!")
+                raise ValueError(f"This SQL command is not valid as it does not have security tags! {doc_link()}")
             
             with _connect_dbs(self.__dbs_data) as conn:
                 cursor = conn.cursor()
-                try:
-                    resp = None
-                    if values:
-                        if type_exe == "unique":
-                            resp = cursor.execute(sql_commands, values)
-                        else:
-                            resp = cursor.executemany(sql_commands, values)
+                resp = None
+                if values:
+                    if type_exe == "unique":
+                        resp = cursor.execute(sql_commands, values)
+                    else:
+                        resp = cursor.executemany(sql_commands, values)
                         
-                        conn.commit()
-                        return resp
-                        
-                    resp = cursor.execute(sql_commands)
+                    conn.commit()
                     return resp
-                    
-                except Exception as err:
-                    print(err)
-                    print(type(err).__name__)
-                cursor.close()
+                        
+                resp = cursor.execute(sql_commands)
+                return resp
                 
    
     def make(self, table_name: str, **kwargs): 
         if not isinstance(table_name, str):
-            raise err_make.type_error("table_name", table_name, "str")
+            raise TypeError(f"(MyORM.make()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
             
         fkey = kwargs.get("f_key")
         kwargs.pop("f_key")
         if fkey != None and not isinstance(fkey, tuple):
-            raise err_make.type_error("f_key", fkey, "tuple")
+            raise TypeError(f"(MyORM.make()) f_key expected a str value, but received a {type(fkey).__name__} ({fkey}). {doc_link()}")
         elif fkey != None and len(fkey) < 2:
-            raise err_make.value_error("f_key", fkey, "2 or more")
+            raise ValueError(f"(MyORM.make()) f_key must have at least 2 values ​​(foreign key + primary key). {doc_link()}")
             
         f_key = None
         if fkey != None:
@@ -112,21 +112,19 @@ class MyORM:
            
     
     def add(self, table_name: str, **kwargs) -> str:
-        # garante que table_name seja uma string
         if not isinstance(table_name, str):
-            raise err_add.type_error("table_name", table_name, "str")
+            raise TypeError(f"(MyORM.add()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
         
         # verifica se é necessário organizar os dados
         values, columns = [], []
         if "columns" in kwargs and "values" in kwargs:
             col = kwargs["columns"]
             val = kwargs["values"]
-            # garante que col = list
+            
             if not isinstance(col, list):
-                raise err_add.type_error("columns", col, "list")
-            # garante que val = list
+                raise TypeError(f"(MyORM.add()) columns expected a list value, but received a {type(col).__name__} ({col}). {doc_link()}")
             if not isinstance(val, list):
-                raise err_add.type_error("values", val, "list")
+                raise TypeError(f"(MyORM.add()) values expected a list value, but received a {type(val).__name__} ({val}). {doc_link()}")
             
             columns = col
             values = val
@@ -143,12 +141,12 @@ class MyORM:
             # impede um número diferente de colunas para valores
             for value in values:
                 if len(columns) != len(value):
-                    raise err_add.value_error(columns, value)
+                    raise ValueError(f"(MyORM.add()) The number of values ​​in columns ({len(columns)}) and values ({len(values)}) ​​is different! {doc_link()}")
                     
         else:
             # impede um número diferente de colunas para valores
             if len(columns) != len(values):
-                raise err_add.value_error(columns, values)
+                raise ValueError(f"(MyORM.add()) The number of values ​​in columns ({len(columns)}) and values ({len(values)}) ​​is different! {doc_link()}")
         
         placeholders = ", ".join([self.__placeholder for _ in columns])
         columns = ", ".join(columns)
@@ -157,22 +155,17 @@ class MyORM:
         self.exe(sql_commands, values, type_exe)
         
         if self.__ret_sql:
-            return {"sql": sql_commands}
+            return {"sql": _remove_tags(sql_commands)}
             
         
     def get(self, table_name: str, columns: Op[list]="all", *args: Op[str], in_dict=True):
-        # garante que table_name seja uma string
         if not isinstance(table_name, str):
-            raise err_get.type_error("table_name", table_name, "str")
-            
-        # garante que columns seja uma lista
+            raise TypeError(f"(MyORM.get()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
         if not isinstance(columns, list) and columns != "all":
-            raise err_get.type_error("columns", columns, "list")
-            
-        # garante que os valores de *args sejam str
+            raise TypeError(f"(MyORM.get()) columns expected a list value, but received a {type(columns).__name__} ({columns}). {doc_link()}")
         for arg in args:
             if not isinstance(arg, str):
-                raise err_get.type_error("*args", arg, "str")
+                raise TypeError(f"(MyORM.get()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
         
         col = "*"
         if columns != "all":
@@ -196,14 +189,14 @@ class MyORM:
             
         
         if self.__ret_sql:
-            result["sql"] = sql_commands
+            result["sql"] = _remove_tags(sql_commands)
         
         return result
         
     
     def cols_name(self, table_name: str):
         if not isinstance(table_name, str):
-            raise TypeError("(cols_name()) table_name requires a string")
+            raise TypeError("(MyORM.cols_name()) table_name requires a string")
             
         resp = self.exe(f"PRAGMA table_info({table_name});", require_tags=False).fetchall()
         
@@ -221,14 +214,12 @@ class MyORM:
             all = self.__alter_all
             
         if not isinstance(table_name, str):
-            raise err_edit.type_error("table_name", table_name, "str")
+            raise TypeError(f"(MyORM.edit()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
         for arg in args:
             if not isinstance(arg, str):
-                raise err_edit.type_error("*args", arg, "str")
+                raise TypeError(f"(MyORM.edit()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
         if not isinstance(all, bool):
-            raise err_edit.type_error("all", all, "bool")
-        if not isinstance(kwargs, dict):
-            raise err_edit.value_error(kwargs)
+            raise TypeError(f"(MyORM.edit()) all expected a bool value, but received a {type(all).__name__} ({all}). {doc_link()}")
         
         values = []
         for key in kwargs:
@@ -240,23 +231,22 @@ class MyORM:
         sql_commands = f"**edit** UPDATE {table_name} SET {setter} {cond.strip()};"
         
         if not "WHERE" in sql_commands and not all:
-            raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
+            raise ValueError(f"For security, the WHERE condition is mandatory. {doc_link()}")
         
         if self.__exe:
             self.exe(sql_commands)
         
         if self.__ret_sql:
-            return {"sql": f"{sql_commands}"}
+            return {"sql": _remove_tags(sql_commands)}
     
     
     def __verify_tags(self, cmd: str, require_tags):
-        types = ["SELECT", "CREATE", "DELETE", "UPDATE", "INSERT"]
-        
+        types = ["SELECT", "CREATE", "DELETE", "UPDATE", "INSERT", "ALTER TABLE"]
         # caso o atributo require_tags=True
         if require_tags:
             cmd_type = None
             for type in types:
-                if type in cmd[:15] or type in cmd[10:17]:
+                if type in cmd[:15] or type in cmd[10:17] or type in cmd[10:21]:
                     cmd_type = type.lower()
             
             if cmd_type == None:
@@ -278,29 +268,64 @@ class MyORM:
             all = self.__alter_all
         
         if not isinstance(table_name, str):
-            raise err_remove.type_error("table_name", table_name, "str")
+            raise TypeError(f"(MyORM.remove()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
         elif not isinstance(all, bool):
-            raise err_remove.type_error("all", all, "bool")
+            raise TypeError(f"(MyORM.remove()) all expected a bool value, but received a {type(all).__name__} ({all}). {doc_link()}")
         else:
             for arg in args:
                 if not isinstance(arg, str):
-                    raise err_remove.type_error("*args", arg, "str")
+                    raise TypeError(f"(MyORM.remove()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
             
         
         cond = " ".join(args)
         sql_command = f"**remove** DELETE FROM {table_name} {cond};"
         
         if not "WHERE" in sql_command and not all:
-            raise ValueError("For security, the WHERE condition is mandatory. See the documentation at https://github.com/paulindavzl/my-orm")
+            raise ValueError(f"For security, the WHERE condition is mandatory. {doc_link()}")
         
         if self.__exe:
             self.exe(sql_command)
                 
         if self.__ret_sql:
-            return {"sql": sql_command}
+            return {"sql": _remove_tags(sql_command)}
+            
+    
+    def edit_table(self, table_name: str, *args: str):
+        if not isinstance(table_name, str):
+            raise TypeError(f"(MyORM.edit_table()) table_name expected a value str, but received a {type(table_name)} ({table_name}). {doc_link()}")
+        for arg in args:
+            if not isinstance(arg, str) and not isinstance(arg, list):
+                raise TypeError(f"(MyORM.edit_table()) *args expected a str/list value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
+        
+        base_cmd = f"**altab** ALTER TABLE {table_name} "
+        for arg in args:
+            if isinstance(arg, tuple) or isinstance(arg, list):
+                for block in arg:
+                    sql_command = " ".join((base_cmd, block))
+                    if self.__exe:
+                        self.exe(sql_command)
+            else:
+                alt = " ".join(args)
+                sql_command = base_cmd + alt
+                
+                if self.__exe:
+                    self.exe(sql_command)
+                
+                if self.__ret_sql:
+                    return {"sql": _remove_tags(sql_command)}
+                
+                
+                    
+        
     
 
 # ignore
 def main():
-    print(__doc__)
-
+    system("clear")
+    print("Documentation for this project is available at: https://github.com/paulindavzl/my-orm.\n Opening...")
+    sleep(uniform(0, 1.5))
+    system("clear")
+    webbrowser.open("https://github.com/paulindavzl/my-orm")
+    sleep(0.5)
+    print("Documentation for this project is available at: https://github.com/paulindavzl/my-orm.")
+    
