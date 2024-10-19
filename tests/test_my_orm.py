@@ -38,7 +38,7 @@ def test_method_show(orm):
     
 
 def test_method_add_multiple(orm):
-    expected_return = """**add** INSERT INTO table (column1, column2) VALUES (?, ?)"""
+    expected_return = """INSERT INTO table (column1, column2) VALUES (?, ?)"""
     
     resp = orm.add(
         "table",
@@ -49,7 +49,7 @@ def test_method_add_multiple(orm):
     
 
 def test_method_add_simple(orm):
-    expected_return = """**add** INSERT INTO table (column1, column2) VALUES (?, ?)"""
+    expected_return = """INSERT INTO table (column1, column2) VALUES (?, ?)"""
     
     resp = orm.add(
         "table",
@@ -60,7 +60,7 @@ def test_method_add_simple(orm):
     
 
 def test_method_select(orm):
-    expected_return = "**get** SELECT * FROM table;"
+    expected_return = "SELECT * FROM table;"
     
     resp = orm.get("table", "all").get("sql")
     
@@ -68,14 +68,14 @@ def test_method_select(orm):
     
 
 def test_method_update(orm):
-    expected_return = """**edit** UPDATE table SET column1 = 'value1' **whe** WHERE column2 **in** IN (tag1, tag2);"""
+    expected_return = """UPDATE table SET column1 = 'value1' WHERE column2 IN (tag1, tag2);"""
     
     resp = orm.edit("table", whe_("column2", ["tag1", "tag2"]), column1="value1").get("sql")
     assert resp == expected_return
     
 
 def test_method_delete(orm):
-    expected_return = """**remove** DELETE FROM table **whe** WHERE column1 = 'value1';"""
+    expected_return = """DELETE FROM table WHERE column1 = 'value1';"""
     
     resp = orm.remove("table", whe_("column1 = 'value1'")).get("sql")
     assert resp == expected_return
