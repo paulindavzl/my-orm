@@ -5,7 +5,7 @@ from SQL.sql_commands_cond import *
 
 def get_error(err_name: str, *args):
     errors = {
-        "type_error": f"({args[3]}()) {args[0]} expected a value like {args[2]}, but received a {type(args[1]).__name__} ({args[1]})"
+        "type_error": f"({args[3]}()) {args[0]} expected a {args[2]} value, but received a {type(args[1]).__name__} ({args[1]}). {doc_link()}"
     }
     
     return errors.get(err_name)

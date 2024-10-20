@@ -1,16 +1,16 @@
-from exceptions.errors_cmd_create import type_error, value_error
+from utils import doc_link
 
-def for_key(referrer: str, referenced: str, *args: str) -> str:
+def for_key(referrer: str, referenced: str, *args: str):
     if not isinstance(referrer, str):
-        raise type_error("referrer", referrer, "str", "for_key")
+        raise TypeError(f"(for_key()) referrer expected a str value, but received a {type(referrer).__name__} ({referrer}). {doc_link}")
     elif not isinstance(referenced, str):
-        raise type_error("referenced", referenced, "str", "for_key")
+        raise TypeError(f"(for_key()) referenced expected a str value, but received a {type(referenced).__name__} ({referenced}). {doc_link}")
     elif not "(" in referenced or not ")" in referenced:
-        raise value_error("referenced", referenced, "table(column)", "for_key")
+        raise ValueError(f"(for_key()) The value that referenced ({referenced}) receives is not valid! A value in the 'table(column)' format is required. {doc_link}")
     else:
         for arg in args:
             if not isinstance(arg, str):
-                raise type_error("*args", arg, "str", "for_key")
+                raise TypeError(f"(for_key()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link}")
     
     sql_commands = f"**fkey** FOREIGN KEY ({referrer}) REFERENCES {referenced} "
     if args:
@@ -21,14 +21,14 @@ def for_key(referrer: str, referenced: str, *args: str) -> str:
 
 def on_up(command: str):
     if not isinstance(command, str):
-        raise type_error("command", command, "str", "on_up")
+        raise TypeError(f"(on_up()) command expected a str value, but received a {type(command).__name__} ({command}). {doc_link}")
     
     return f"ON UPDATE {command.upper()}"
     
     
 def on_del(command: str):
     if not isinstance(command, str):
-        raise type_error("command", command, "str", "on_del")
+        raise TypeError(f"(on_del()) command expected a str value, but received a {type(command).__name__} ({command}). {doc_link}")
     
     return f"ON DELETE {command.upper()}"
     
@@ -36,7 +36,7 @@ def on_del(command: str):
 def prop(*args: str, default=None):
     for arg in args:
         if not isinstance(arg, str):
-            raise type_error("*args", arg, "str", "prop")
+            raise TypeError(f"(prop()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link}")
     
     # comandos SQL abreviados
     abbreviations = {

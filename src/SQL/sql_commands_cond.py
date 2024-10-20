@@ -1,13 +1,13 @@
 from typing import Optional as Op
-from exceptions.errors_cmd_cond import type_error
+from utils import doc_link
     
 
 def whe_(condition: str, cond_in: Op[list]=None):
     """retorna a condição WHERE"""
     if not isinstance(condition, str):
-        raise type_error("condition", condition, "str", "whe_")
+        raise TypeError(f"(whe_()) condition expected a str value, but received a {type(condition).__name__} ({condition}). {doc_link()}")
     if cond_in != None and not isinstance(cond_in, list):
-        raise type_error("cond_in", cond_in, "list", "whe_")
+        raise TypeError(f"(whe_()) cond_in expected a list value, but received a {type(cond_in).__name__} ({cond_in}). {doc_link()}")
     
     if cond_in != None:
         cond = in_(cond_in, "whe_")
@@ -25,9 +25,9 @@ def betw_(par1, par2) -> str:
 def and_(condition: str, cond_in: Op[list]=None):
     """retorna a condição AND"""
     if not isinstance(condition, str):
-        raise type_error("condition", condition, "str", "and_")
+        raise TypeError(f"(and_()) condition expected a str value, but received a {type(condition).__name__} ({condition}). {doc_link()}")
     if cond_in != None and not isinstance(cond_in, list):
-        raise type_error("cond_in", cond_in, "list", "and_")
+        raise TypeError(f"(and_()) cond_in expected a list value, but received a {type(cond_in).__name__} ({cond_in}). {doc_link()}")
     
     sql_command = ""
     if cond_in != None:
@@ -42,9 +42,9 @@ def and_(condition: str, cond_in: Op[list]=None):
 def or_(condition: str, cond_in: Op[list]=None):
     """retorna a condição OR"""
     if not isinstance(condition, str):
-        raise type_error("condition", condition, "str", "or_")
+        raise TypeError(f"(or_()) condition expected a str value, but received a {type(condition).__name__} ({condition}). {doc_link()}")
     if cond_in != None and not isinstance(cond_in, list):
-        raise type_error("cond_in", cond_in, "list", "or_")
+        raise TypeError(f"(or_()) cond_in expected a list value, but received a {type(cond_in).__name__} ({cond_in}). {doc_link()}")
     
     sql_command = ""
     if cond_in != None:
@@ -59,7 +59,7 @@ def or_(condition: str, cond_in: Op[list]=None):
 def in_(values: list, funct: Op[str]="in_"):
     """retorna a condição IN"""
     if not isinstance(values, list):
-        raise type_error("values", values, "list", funct)
+        raise TypeError(f"({funct}()) values expected a list value, but received a {type(values).__name__} ({values}). {doc_link()}")
     if len(values) < 1:
         raise ValueError(f"({funct}()) The list of values ​​cannot be empty. See the documentation at https://github.com/paulindavzl/my-orm.")
     

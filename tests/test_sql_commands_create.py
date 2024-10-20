@@ -3,15 +3,9 @@ import re
 from SQL.sql_commands_create import *
 from SQL.sql_commands_prop import *
 
-def get_errors(error: str, *args) -> str:
-    """retorna as exceções
-        Args:
-            type (str): tipo de erro (ValueError, TypeError...)
-            args (str): informações extras para o erro"""
-    
+def get_errors(error: str, *args):
     errors = {
-        "TypeError": f"Unexpected '{type(args[1]).__name__}' ({args[1]}) in {args[3]}(). {args[0]} expects a value of type '{args[2]}'. See the documentation at https://github.com/paulindavzl/my-orm.",
-        "ValueError": f"The value passed in '{args[0]}' ({args[1]}) is incorrect! {args[3]}() expects the value in '{args[2]}' format for the variable '{args[0]}'. See the documentation at https://github.com/paulindavzl/my-orm"
+        "TypeError": f"({args[0]}) {args[1]} expected a {args[2]} value, but received a {type(args[3]).__name__} ({args[3]}). {doc_link()}"
     }
             
     return errors.get(error)
@@ -33,13 +27,13 @@ def test_decimal():
     
     
 def test_decimal_invalid_preciosion():
-    error_precision = re.escape(get_errors("TypeError", "precision", "a", "int", "decimal"))
+    error_precision = re.escape(get_errors("TypeError", "decimal()", "precision", "int", "a"))
     with pytest.raises(TypeError, match = error_precision):
         decimal("a", 9), prop("n_null")
         
         
 def test_decimal_invalid_scale():
-    error_precision = re.escape(get_errors("TypeError", "scale", "a", "int", "decimal"))
+    error_precision = re.escape(get_errors("TypeError", "decimal()", "scale", "int", "a"))
     with pytest.raises(TypeError, match = error_precision):
         decimal(10, "a"), prop("n_null")
         
@@ -55,7 +49,7 @@ def test_char():
     
     
 def test_char_invalid_length():
-    error_length = re.escape(get_errors("TypeError", "length", "a", "int", "char"))
+    error_length = re.escape(get_errors("TypeError", "char()", "length", "int", "a"))
     with pytest.raises(TypeError, match = error_length):
         char("a"), prop("n_null")
         
@@ -66,7 +60,7 @@ def test_varchar():
     
 
 def test_varchar_invalid_max_length():
-    error_length = re.escape(get_errors("TypeError", "max_length", "a", "int", "varchar"))
+    error_length = re.escape(get_errors("TypeError", "varchar()", "max_length", "int", "a"))
     with pytest.raises(TypeError, match = error_length):
         varchar("a"), prop("uni", "n_null")
         
@@ -82,22 +76,16 @@ def test_boolean():
     
 
 def test_date():
-    """testa a função que gera o comando DATE do SQL"""
-    
     date_return = "DATE NOT NULL"
     assert date(), prop("n_null") == date_return
     
 
 def test_datetime():
-    """testa função que gera o comando DATETIME do SQL"""
-    
     datetime_return = "DATETIME NOT NULL"
     assert datetime(), prop("n_null") == datetime_return
     
 
 def test_timestamp():
-    """testa função que gera o comando TIMESTAMP do SQL"""
-    
     timestamp_return = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
     assert timestamp(), prop(default="current") == timestamp_return
     

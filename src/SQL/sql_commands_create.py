@@ -1,4 +1,4 @@
-from exceptions.errors_cmd_create import type_error
+from utils import doc_link
 
 def integer():
     sql_commands = f"**int** INTEGER"
@@ -14,9 +14,9 @@ def t_float():
 
 def decimal(precision: int, scale: int):
     if not isinstance(precision, int):
-        raise type_error("precision", precision, "int", "decimal")
+        raise TypeError(f"(decimal()) precision expected a int value, but received a {type(precision).__name__} ({precision}). {doc_link()}")
     if not isinstance(scale, int):
-        raise type_error("scale", scale, "int", "decimal")
+        raise TypeError(f"(decimal()) scale expected a int value, but received a {type(scale).__name__} ({scale}). {doc_link()}")
     
     sql_commands = f"**dec** DECIMAL({precision}, {scale})"
     
@@ -32,7 +32,7 @@ def double():
     
 def char(length: int):
     if not isinstance(length, int):
-        raise type_error("length", length, "int", "char")
+        raise TypeError(f"(char()) length expected a int value, but received a {type(length).__name__} ({length}). {doc_link()}")
     
     sql_commands = f"**char** CHAR({length})"
 
@@ -41,7 +41,7 @@ def char(length: int):
 
 def varchar(max_length: int):
     if not isinstance(max_length, int):
-        raise type_error("max_length", max_length, "int", "varchar")
+        raise TypeError(f"(varchar()) max_length expected a int value, but received a {type(max_length).__name__} ({max_length}). {doc_link()}")
     
     sql_commands = f"**vchar** VARCHAR({max_length})"
         
