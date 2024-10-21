@@ -12,7 +12,6 @@ from utils import doc_link
 from utils.convert import _to_dict
 from utils.verify_tags import _requirements_tags as _req_tags, _remove_tags
 from utils.validate import _is_valid_dbs_data
-from exceptions import errors_method_insert as err_add, errors_method_create as err_make, errors_method_select as err_get, errors_method_update as err_edit, errors_method_delete as err_remove
 
 class MyORM:
     

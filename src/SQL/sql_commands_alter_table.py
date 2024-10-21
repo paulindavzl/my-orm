@@ -22,11 +22,11 @@ def drop(column_name: str):
     return sql_command
     
     
-def alt_column(column_name: str, props):
+def edit(column_name: str, props):
     if not isinstance(column_name, str):
-        raise TypeError(f"(alt_column()) column_name expected a str value, but received a {type(column_name).__name__} ({column_name}). {doc_link()}")
+        raise TypeError(f"(edit()) column_name expected a str value, but received a {type(column_name).__name__} ({column_name}). {doc_link()}")
     elif not isinstance(props, tuple) and not isinstance(props, list) and not isinstance(props, str):
-        raise TypeError(f"(alt_column()) props expected a str/tuple/list value, but received a {type(props).__name__} ({props}). {doc_link()}")
+        raise TypeError(f"(edit()) props expected a str/tuple/list value, but received a {type(props).__name__} ({props}). {doc_link()}")
     
     types = props
     if not isinstance(props, str):

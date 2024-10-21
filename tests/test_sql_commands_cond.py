@@ -1,6 +1,6 @@
 import pytest
 import re
-from SQL.sql_commands_cond import *
+from my_orm import *
 
 
 def get_error(err_name: str, *args):

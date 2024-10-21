@@ -1,7 +1,6 @@
 import pytest
 import re
-from SQL.sql_commands_create import *
-from SQL.sql_commands_prop import *
+from my_orm import *
 
 def get_errors(error: str, *args):
     errors = {

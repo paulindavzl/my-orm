@@ -1,2 +1,0 @@
-def type_error(var_name: str, var, expec: str, funct: str):
-    return TypeError(f"({funct}()) {var_name} expected a value like {expec}, but received a {type(var).__name__} ({var}). See the documentation at https://github.com/paulindavzl/my-orm.")

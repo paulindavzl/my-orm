@@ -79,6 +79,13 @@ def test_method_delete(orm):
     
     resp = orm.remove("table", whe_("column1 = 'value1'")).get("sql")
     assert resp == expected_return
+    
+
+def test_method_alter_table(orm):
+    expected_return = "ALTER TABLE Users ADD cpf INTEGER UNIQUE;"
+    
+    resp = orm.edit_table("Users", add("cpf", (integer(), prop("uni")))).get("sql")
+    assert resp == expected_return
 
 
 if __name__ == "__main__":
