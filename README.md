@@ -56,7 +56,7 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](#Atributos)**
 
 ____
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS
     );
 ```
 
-**Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](##Propiedades)**
+**Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](#Propiedades)**
 
 ___
 
@@ -166,7 +166,7 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **OBS: Sempre deve-se informar as colunas (ou "all"), caso contrário resultará em erro!**
 
-**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
 
 ## Atualizar
 
@@ -197,11 +197,11 @@ orm = MyORM(alter_all=True)
 
 Desta forma, não será obrigatório uma condição!
 
-**Esta funcionalidade também existe em [`DELETAR`](##Deletar)**
+**Esta funcionalidade também existe em [`DELETAR`](#Deletar)**
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](#Atributos)**
 
-**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
 
 ## Deletar
 
@@ -222,7 +222,7 @@ Este comando é o mesmo que:
 DELETE FROM Users WHERE id = 1001;
 ```
 
-**Assim como em [`ATUALIZAR`](##Atualizar), uma condição é obrigatória por padrão para evitar exclusão acidental! É possível desativar esta fucionalidade:**
+**Assim como em [`ATUALIZAR`](#Atualizar), uma condição é obrigatória por padrão para evitar exclusão acidental! É possível desativar esta fucionalidade:**
 
 ```python
 # True permite / False não permite (padrão)
@@ -231,6 +231,6 @@ orm = MyORM(alter_all=True)
 
 Assim não será necessário executar com uma condição!
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](#Atributos)**
 
-**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
