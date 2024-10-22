@@ -66,7 +66,8 @@ Para criar tabelas utiliza-se o método **`MyORM.make()`**:
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
-orm.make(p("pri_key")), # nome da coluna = tipo/propriedade
+orm.make("Order", # nome da tabela
+    id = (integer(), prop("pri_key")), # nome da coluna = tipo/propriedade
     user_id = (integer(), prop("n_null")), # nome da coluna = tipo/propriedade
     f_key = ("user_id", "Users(id)") # chave estrageira define-se usando f_key = (chave estrangeira, tabela(chave primária))   
 )
@@ -142,12 +143,15 @@ orm.get(
 )
 ```
 
+**O retorno deste método por padrão é em formato de dicionário. Esta funcionalidade pode ser desativada definindo o argumento `in_dict` como `False`:**
+
+```python
+orm.get(in_dict=False)
+```
+
+Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
+
 **OBS: Sempre deve-se informar as colunas (ou "all"), caso contrário resultará em erro!**
 
 **Veja mais sobre WHERE (whe_()) em [`Condições`](#Condições)**
 
-<<<<<<< HEAD
-____
-=======
-____
->>>>>>> 54ad9bd (new method: MyORM.alter_table and new functions)
