@@ -56,7 +56,7 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](##Atributos)**
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
 
 ____
 
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS
     );
 ```
 
-**Veja mais sobre `foreign key` e outras propriedades em [`Propriedades`](##Propiedades)**
+**Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](##Propiedades)**
 
 ___
 
@@ -154,7 +154,7 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **OBS: Sempre deve-se informar as colunas (ou "all"), caso contrário resultará em erro!**
 
-**Veja mais sobre WHERE (whe_()) e outras condições em [`Condições`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](##Condições)**
 
 ## Atualizar
 
@@ -181,6 +181,6 @@ Desta forma, não será obrigatório uma condição!
 
 **Este atributo também é válido no método [`DELETE`](##Deletar)**
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](##Atributos)**
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
 
-**Veja mais sobre WHERE (whe_()) e outras condições em [`Condições`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](##Condições)**
