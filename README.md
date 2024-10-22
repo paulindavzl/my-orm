@@ -34,7 +34,7 @@ $ pip install my-orm[SGDB]
 
 ____
 
-## Primeiros passos:
+## Primeiros passos
 
 Importe todas as funcionalidades da biblioteca:
 
@@ -66,7 +66,8 @@ Para criar tabelas utiliza-se o método **`MyORM.make()`**:
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
-orm.make("Order", # nome da tabela
+orm.make(
+    "Order", # nome da tabela
     id = (integer(), prop("pri_key")), # nome da coluna = tipo/propriedade
     user_id = (integer(), prop("n_null")), # nome da coluna = tipo/propriedade
     f_key = ("user_id", "Users(id)") # chave estrageira define-se usando f_key = (chave estrangeira, tabela(chave primária))   
@@ -88,7 +89,7 @@ CREATE TABLE IF NOT EXISTS
 
 ___
 
-## Inserir dados:
+## Inserir dados
 
 Para inserir dados em uma tabela, usa-se o método **`MyORM.add()`**:
 
@@ -122,7 +123,7 @@ INSERTO INTO Users (name, email) VALUES (?, ?);
 
 ____
 
-## Selecionar dados:
+## Selecionar dados
 
 Para retornar dados é utilizado o método **`MyORM.get()`**:
 
@@ -155,3 +156,27 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **Veja mais sobre WHERE (whe_()) em [`Condições`](#Condições)**
 
+## Atualizar dados
+
+Para atualizar dados, é o utilizado o método **`MyORM.edit()`**:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.edit(
+    "Users", # nome da tabela
+    whe_("name = 'User1'"), # condição/condições
+    name = "User2" # alteração/alterações
+)
+```
+
+**Por padrão, alterar registros exige uma condição para evitar alterar todos os registros por acidente. Esta funcionalidade pode ser desativada ao instanciar a classe MyORM:**
+
+```python
+# True permite / False não permite (padrão)
+orm = MyORM(alter_all=True)
+```
+
+Desta forma, não será obrigatório uma condição!
+
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](#Atributos)**
