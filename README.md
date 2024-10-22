@@ -60,9 +60,9 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 ____
 
-## Criar tabela
+## Criar
 
-Para criar tabelas utiliza-se o método **`MyORM.make()`**:
+Para criar tabelas utiliza-se o método **`MyORM.make()`:**
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
@@ -91,7 +91,7 @@ ___
 
 ## Inserir
 
-Para inserir dados em uma tabela, usa-se o método **`MyORM.add()`**:
+Para inserir dados em uma tabela, usa-se o método **`MyORM.add()`:**
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
@@ -125,7 +125,7 @@ ____
 
 ## Selecionar
 
-Para selecionar dados é utilizado o método **`MyORM.get()`**:
+Para selecionar dados é utilizado o método **`MyORM.get()`:**
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
@@ -170,7 +170,7 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 ## Atualizar
 
-Para atualizar dados, é o utilizado o método **`MyORM.edit()`**:
+Para atualizar dados, é o utilizado o método **`MyORM.edit()`:**
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
@@ -197,7 +197,39 @@ orm = MyORM(alter_all=True)
 
 Desta forma, não será obrigatório uma condição!
 
-**Este atributo também é válido no método [`DELETE`](##Deletar)**
+**Esta funcionalidade também existe em [`DELETAR`](##Deletar)**
+
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
+
+**Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](##Condições)**
+
+## Deletar
+
+Para deletar dados, usa-se o método **`MyORM.remove()`:**
+
+```pythom
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.remove(
+    "Users", # nome da tabela
+    whe_("id=1001") # condição/condições
+)
+```
+
+Este comando é o mesmo que:
+
+```sql
+DELETE FROM Users WHERE id = 1001;
+```
+
+**Assim como em [`ATUALIZAR`](##Atualizar), uma condição é obrigatória por padrão para evitar exclusão acidental! É possível desativar esta fucionalidade:**
+
+```python
+# True permite / False não permite (padrão)
+orm = MyORM(alter_all=True)
+```
+
+Assim não será necessário executar com uma condição!
 
 **Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](##Atributos)**
 
