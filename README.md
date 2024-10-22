@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS
     );
 ```
 
-**Veja mais sobre `foreign key` na seção de [`Propriedades`](##Propiedades)**
+**Veja mais sobre `foreign key` e outras propriedades em [`Propriedades`](##Propiedades)**
 
 ___
 
@@ -154,7 +154,7 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **OBS: Sempre deve-se informar as colunas (ou "all"), caso contrário resultará em erro!**
 
-**Veja mais sobre WHERE (whe_()) em [`Condições`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`Condições`](##Condições)**
 
 ## Atualizar
 
@@ -183,4 +183,4 @@ Desta forma, não será obrigatório uma condição!
 
 **Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](##Atributos)**
 
-**Veja mais sobre WHERE (whe_()) em [`Condições`](##Condições)**
+**Veja mais sobre WHERE (whe_()) e outras condições em [`Condições`](##Condições)**
