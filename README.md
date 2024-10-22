@@ -140,8 +140,20 @@ orm.get(
 orm.get(
     "Users", # nome da tabela
     columns = ["id"], # coluna(s) que serão retornadas, podem ter o parâmetro columns ou não
-    whe_("name = 'example'") # condição, opcional
+    whe_("name = 'example'") # condição/condições opcional(is)
 )
+```
+
+Este comando é o mesmo que:
+
+```sql
+SELECT * FROM Users;
+```
+
+ou
+
+```sql
+SELECT id FROM Users WHERE name = "example";
 ```
 
 **O retorno deste método por padrão é em formato de dicionário. Esta funcionalidade pode ser desativada definindo o argumento `in_dict` como `False`:**
