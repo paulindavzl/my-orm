@@ -197,13 +197,13 @@ orm = MyORM(alter_all=True)
 
 Desta forma, não será obrigatório uma condição!
 
-**Esta funcionalidade também existe em [`DELETAR`](#Deletar)**
+**Esta funcionalidade também existe em [`DELETAR`](#Deletar-dados)**
 
 **Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](#Atributos)**
 
 **Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
 
-## Deletar
+## Deletar dados
 
 Para deletar dados, usa-se o método **`MyORM.remove()`:**
 
