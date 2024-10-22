@@ -56,7 +56,7 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](#Atributos)**
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](##Atributos)**
 
 ____
 
@@ -85,11 +85,11 @@ CREATE TABLE IF NOT EXISTS
     );
 ```
 
-**Veja mais sobre `foreign key` na seção de [`Propriedades`](#Propiedades)**
+**Veja mais sobre `foreign key` na seção de [`Propriedades`](##Propiedades)**
 
 ___
 
-## Inserir dados
+## Inserir
 
 Para inserir dados em uma tabela, usa-se o método **`MyORM.add()`**:
 
@@ -123,9 +123,9 @@ INSERTO INTO Users (name, email) VALUES (?, ?);
 
 ____
 
-## Selecionar dados
+## Selecionar
 
-Para retornar dados é utilizado o método **`MyORM.get()`**:
+Para selecionar dados é utilizado o método **`MyORM.get()`**:
 
 ```python
 orm = MyORM(dbs="sqlite", url="./database/dbs.db")
@@ -154,9 +154,9 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **OBS: Sempre deve-se informar as colunas (ou "all"), caso contrário resultará em erro!**
 
-**Veja mais sobre WHERE (whe_()) em [`Condições`](#Condições)**
+**Veja mais sobre WHERE (whe_()) em [`Condições`](##Condições)**
 
-## Atualizar dados
+## Atualizar
 
 Para atualizar dados, é o utilizado o método **`MyORM.edit()`**:
 
@@ -179,4 +179,8 @@ orm = MyORM(alter_all=True)
 
 Desta forma, não será obrigatório uma condição!
 
-**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](#Atributos)**
+**Este atributo também é válido no método [`DELETE`](##Deletar)**
+
+**Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`Atributos`](##Atributos)**
+
+**Veja mais sobre WHERE (whe_()) em [`Condições`](##Condições)**
