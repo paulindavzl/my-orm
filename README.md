@@ -182,6 +182,12 @@ orm.edit(
 )
 ```
 
+Este comando equivale a:
+
+```sql
+UPDATE Users SET name = "User2" WHERE name = "User1";
+```
+
 **Por padrão, alterar registros exige uma condição para evitar alterar todos os registros por acidente. Esta funcionalidade pode ser desativada ao instanciar a classe MyORM:**
 
 ```python
