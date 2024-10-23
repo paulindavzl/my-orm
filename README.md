@@ -1,5 +1,20 @@
 # My ORM
+
 Biblioteca simples que facilita o desenvolvimento simples de **CRUDs** usando Python.
+
+___
+
+## Sumário
+
+**[`MyORM`](#MyORM): Documentação da biblioteca. <br>
+..........[`Sumário`](#Sumário): Sumário. <br>
+..........[`Instalação`](#Instalação): Como instalar a biblioteca. <br>
+..........[`Primeiros passos`](#Primeiros-passos): Como configurar a classe MyORM. <br>
+..........[`Criar tabela`](#Criar-tabela): Como criar uma tabela usando métodos da biblioteca (CREATE). <br>
+..........[`Inserir dados`](#Inserir-dados): Como inserir registros em uma tabela usando métodos da biblioteca (INSERT). <br>
+..........[`Selecionar dados`](#Selecionar-dados): Como selecionar dados de uma tabela usando os métodos da biblioteca (SELECT). <br>
+..........[`Atualizar dados`](#Atualizar-dados): Como atualizar e modificar registros de uma tabela usando os métodos da biblioteca (UPDATE). <br>
+..........[`Deletar dados`](#Deletar-dados): Como deletar registros de uma tabela usando métodos da biblioteca (DELETE) <br>**
 
 ____
 
