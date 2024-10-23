@@ -346,6 +346,9 @@ WHERE classification IN ('tag1', 'tag2');
 
 ```python
 whe_(condition: str, cond_in: Optional[str]=None)
+
+# condition = condição
+# cond_in = quando a condição está dentro de um IN
 ```
 
 ### BETWEEN
@@ -354,4 +357,19 @@ Para usar a condição `BETWEEN`, utiliza-se a função `betw_()` dentro das con
 
 ```python
 whe_(betw_("age", 10, 15))
+```
+
+O resultado deste comando seria:
+
+```sql
+WHERE age BETWEEN 10 AND 15;
+```
+
+**Estrutura:**
+
+```python
+betw_(column: str, par1, par2)
+
+# column = nome da coluna verificada
+# par1 e par2 = parâmetros que a coluna verificada deve estar
 ```
