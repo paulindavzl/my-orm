@@ -60,7 +60,7 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 ____
 
-## Criar
+## Criar tabela
 
 Para criar tabelas utiliza-se o método **`MyORM.make()`:**
 
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS
 
 ___
 
-## Inserir
+## Inserir dados
 
 Para inserir dados em uma tabela, usa-se o método **`MyORM.add()`:**
 
@@ -123,7 +123,7 @@ INSERTO INTO Users (name, email) VALUES (?, ?);
 
 ____
 
-## Selecionar
+## Selecionar dados
 
 Para selecionar dados é utilizado o método **`MyORM.get()`:**
 
@@ -168,7 +168,7 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
 
-## Atualizar
+## Atualizar dados
 
 Para atualizar dados, é o utilizado o método **`MyORM.edit()`:**
 
@@ -222,7 +222,7 @@ Este comando é o mesmo que:
 DELETE FROM Users WHERE id = 1001;
 ```
 
-**Assim como em [`ATUALIZAR`](#Atualizar), uma condição é obrigatória por padrão para evitar exclusão acidental! É possível desativar esta fucionalidade:**
+**Assim como em [`ATUALIZAR`](#Atualizar-dados), uma condição é obrigatória por padrão para evitar exclusão acidental! É possível desativar esta fucionalidade:**
 
 ```python
 # True permite / False não permite (padrão)
@@ -234,3 +234,66 @@ Assim não será necessário executar com uma condição!
 **Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](#Atributos)**
 
 **Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
+
+## Alterar tabela
+
+Para alterar uma tabela (colunas, propriedades...), utiliza-se o método **`MyORM.edit_table`:**
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+# adicionar uma coluna
+orm.edit_table(
+    "Users", # nome da tabela
+    add("email", (varchar(30), prop("n_null", "uni")) # alteração
+)
+```
+
+Este método equivale ao comando SQL:
+
+```sql
+ALTER TABLE Users ADD email VARCHAR(30) NOT NULL UNIQUE;
+```
+
+Outras alterações na tabela são:
+
+* drop():
+    Remover uma coluna
+  
+    ```python
+    orm.edit_table(
+        "Users",
+        drop("email")
+    )
+    ```
+
+* edit():
+    Alterar propriedades de uma coluna
+
+    ```python
+    orm.edit_table(
+        "Users",
+        edit("email", (varchar(20), prop("n_null")))
+    )
+    ```
+
+* ren_column():
+    Renomear uma coluna
+
+    ```python
+    orm.edit_table(
+        "Users",
+        ren_column("old_name", "new_name")
+    )
+    ```
+
+* rename():
+    Renomear uma tabela
+
+  ```python
+  orm.edit_table(
+      "Users",
+      rename("users")
+  )
+  ```
+    
