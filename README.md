@@ -373,3 +373,91 @@ betw_(column: str, par1, par2)
 # column = nome da coluna verificada
 # par1 e par2 = parâmetros que a coluna verificada deve estar
 ```
+
+### AND
+
+Para utilizar a condição `AND`, a função `and_()` é utilizada:
+
+```python
+and_("id = 0")
+and_("name = 'User1'")
+```
+
+Note que para passar strings, usa-se aspas, simples ou duplas (neste caso simples) e para passar inteiros não utiliza-se nada!
+
+O retorno desta função seria:
+
+```sql
+AND id = 0;
+```
+
+ou
+
+```sql
+AND name = "User1";
+```
+
+**Caso você queira verificar se um valor está em uma lista de outros valores, como no caso da condição [`IN`](#IN), basta usar a função assim:**
+
+```python
+and_("classification", "'tag1', 'tag2'")
+```
+
+Esquivale à:
+
+```sql
+AND classification IN ('tag1', 'tag2');
+```
+
+**Estrutura:**
+
+```python
+and_(condition: str, cond_in: Optional[str]=None)
+
+# condition = condição
+# cond_in = quando a condição está dentro de um IN
+```
+
+### OR
+
+Para utilizar a condição `OR`, a função `or_()` é utilizada:
+
+```python
+or_("id = 0")
+or_("name = 'User1'")
+```
+
+Note que para passar strings, usa-se aspas, simples ou duplas (neste caso simples) e para passar inteiros não utiliza-se nada!
+
+O retorno desta função seria:
+
+```sql
+OR id = 0;
+```
+
+ou
+
+```sql
+OR name = "User1";
+```
+
+**Caso você queira verificar se um valor está em uma lista de outros valores, como no caso da condição [`IN`](#IN), basta usar a função assim:**
+
+```python
+or_("classification", "'tag1', 'tag2'")
+```
+
+Esquivale à:
+
+```sql
+OR classification IN ('tag1', 'tag2');
+```
+
+**Estrutura:**
+
+```python
+or_(condition: str, cond_in: Optional[str]=None)
+
+# condition = condição
+# cond_in = quando a condição está dentro de um IN
+```
