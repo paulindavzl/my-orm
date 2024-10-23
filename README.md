@@ -258,6 +258,7 @@ ALTER TABLE Users ADD email VARCHAR(30) NOT NULL UNIQUE;
 Outras alterações na tabela são:
 
 * drop():
+* 
     Remover uma coluna
   
     ```python
@@ -268,6 +269,7 @@ Outras alterações na tabela são:
     ```
 
 * edit():
+* 
     Alterar propriedades de uma coluna
 
     ```python
@@ -278,6 +280,7 @@ Outras alterações na tabela são:
     ```
 
 * ren_column():
+* 
     Renomear uma coluna
 
     ```python
@@ -288,6 +291,7 @@ Outras alterações na tabela são:
     ```
 
 * rename():
+* 
     Renomear uma tabela
 
   ```python
