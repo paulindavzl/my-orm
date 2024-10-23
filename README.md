@@ -350,7 +350,7 @@ whe_(condition: str, cond_in: Optional[str]=None)
 
 ### BETWEEN
 
-Para usar a condição `BETWEEN`, utiliza-se a função `betw_()` dentro das condição [`WHERE`](##WHERE), [`AND`](##AND) e/ou [`OR`](##OR):
+Para usar a condição `BETWEEN`, utiliza-se a função `betw_()` dentro das condição [`WHERE`](#WHERE), [`AND`](#AND) e/ou [`OR`](#OR):
 
 ```python
 whe_(betw_("age", 10, 15))
