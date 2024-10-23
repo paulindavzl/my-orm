@@ -333,14 +333,25 @@ WHERE name = "User1";
 **Caso você queira verificar se um valor está em uma lista de outros valores, como no caso da condição [`IN`](#IN), basta usar a função assim:**
 
 ```python
-whe_("classification", ["tag1", "tag2"])
+whe_("classification", "'tag1', 'tag2'")
 ```
 
 Esquivale à:
 
 ```sql
-WHERE classification IN (tag1, tag2);
+WHERE classification IN ('tag1', 'tag2');
+```
+
+**Estrutura:**
+
+```python
+whe_(condition: str, cond_in: Optional[str]=None)
 ```
 
 ### BETWEEN
 
+Para usar a condição `BETWEEN`, utiliza-se a função `betw_()` dentro das condição [`WHERE`](##WHERE), [`AND`](##AND) e/ou [`OR`](##OR):
+
+```python
+whe_(betw_("age", 10, 15))
+```
