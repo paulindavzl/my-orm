@@ -300,4 +300,47 @@ Outras alterações na tabela são:
       rename("users")
   )
   ```
-    
+
+**Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](#Propiedades)**
+
+## Condições
+
+As condições desta **ORM** são, no geral, simplificadas para facilitar a organização do script final:
+
+### WHERE
+
+A condição `WHERE` pode ser declarada utilizando a função `whe_()`:
+
+```python
+whe_("id = 0")
+whe_("name = 'User1'")
+```
+
+Note que para passar strings, usa-se aspas, simples ou duplas (neste caso simples) e para passar inteiros não utiliza-se nada!
+
+O retorno desta função seria:
+
+```sql
+WHERE id = 0;
+```
+
+ou
+
+```sql
+WHERE name = "User1";
+```
+
+**Caso você queira verificar se um valor está em uma lista de outros valores, como no caso da condição [`IN`](#IN), basta usar a função assim:**
+
+```python
+whe_("classification", ["tag1", "tag2"])
+```
+
+Esquivale à:
+
+```sql
+WHERE classification IN (tag1, tag2);
+```
+
+### BETWEEN
+
