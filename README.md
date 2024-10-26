@@ -8,6 +8,7 @@ ___
 
 **[`MyORM`](#MyORM): Documentação da biblioteca. <br>
 ..........[`Sumário`](#Sumário): Sumário. <br>
+..........[`Estrutura`](#Estrutura): Estrutura em que o projeto está organizado. <br>
 ..........[`Instalação`](#Instalação): Como instalar a biblioteca. <br>
 ..........[`Primeiros passos`](#Primeiros-passos): Como configurar a classe MyORM. <br>
 ..........[`Criar tabela`](#Criar-tabela): Como criar uma tabela usando métodos da biblioteca (CREATE). <br>
@@ -58,6 +59,10 @@ my-orm/
 |    |—— test_sql_commands_cond.py
 |    |—— test_sql_commands_create.py
 |    |—— test_sql_commands_prop.py
+|
+|—— README.md
+|—— requirements.txt
+|—— setup.py
 ```
 
 ____
