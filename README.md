@@ -379,6 +379,8 @@ ____
 
 As condições desta **ORM** são, no geral, simplificadas para facilitar a organização do script final:
 
+____
+
 ### WHERE
 
 A condição `WHERE` pode ser declarada utilizando a função `whe_()`:
@@ -422,6 +424,8 @@ whe_(condition: str, cond_in: Optional[str]=None)
 # condition = condição
 # cond_in = quando a condição está dentro de um IN
 ```
+
+____
 
 ### BETWEEN
 
@@ -489,6 +493,8 @@ and_(condition: str, cond_in: Optional[str]=None)
 # condition = condição
 # cond_in = quando a condição está dentro de um IN
 ```
+
+____
 
 ### OR
 
