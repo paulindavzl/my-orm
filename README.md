@@ -539,3 +539,62 @@ or_(condition: str, cond_in: Optional[str]=None)
 # condition = condição
 # cond_in = quando a condição está dentro de um IN
 ```
+
+____
+
+## Propriedades
+
+Propriedades que podem ser atribuídas à colunas ([`tipos de dados`](#Tipos-de-dados) / [`Restrições`](#Restrições)).
+
+**Obs: com exceção de [`PRIMARY KEY`](#PRIMARY-KEY), todas propriedades devem estar dentro de uma tupla!**
+
+### Tipos de dados
+
+Indica qual será o tipo de dado que uma coluna receberá.
+
+#### INTEGER
+
+Definir uma coluna como INTEGER ao criar ou editar uma tabela usa-se `integer()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    id = (integer())
+)
+```
+
+#### FLOAT
+
+Definir uma coluna como FLOAT ao criar ou editar uma tabela usa-se `t_float()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    id = (t_float())
+)
+```
+
+#### DECIMAL
+
+Definir uma coluna como DECIMAL ao criar ou editar uma tabela usa-se `decimal()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    id = (decimal(10, 9))
+)
+```
+
+Nota-se que decimal recebe dois parâmetros: 
+```python
+decimal(precision: int, scale: int)
+
+# precision: indica quantos dígitos terão no número armazenado
+# scale: indica quantos dígitos terão após o ponto decimal
+```
