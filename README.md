@@ -26,6 +26,26 @@ ___
 
 ____
 
+## Estrutura
+
+```
+my-orm/
+|
+|—— src/
+|    |
+|    |—— SQL/
+|    |    |—— __init__.py
+|    |    |—— manager.py
+|    |    |—— sql_commands_alter_table.py
+|    |    |—— sql_commands_cond.py
+|    |    |—— sql_commands_create.py
+|    |    |—— sql_commands_prop.py
+|    |
+|    |—— 
+```
+
+____
+
 ## Instalação
 
 * Clonando o repositório
