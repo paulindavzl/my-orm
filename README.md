@@ -232,6 +232,8 @@ Desta forma, o retorno será no formado padrão do SGDB, geralmente em listas!
 
 **Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
 
+____
+
 ## Atualizar dados
 
 Para atualizar dados, é o utilizado o método **`MyORM.edit()`:**
@@ -267,6 +269,8 @@ Desta forma, não será obrigatório uma condição!
 
 **Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
 
+____
+
 ## Deletar dados
 
 Para deletar dados, usa-se o método **`MyORM.remove()`:**
@@ -298,6 +302,8 @@ Assim não será necessário executar com uma condição!
 **Veja mais atributos que podem ser definidos ao instanciar a classe `MyORM` em [`ATRIBUTOS`](#Atributos)**
 
 **Veja mais sobre WHERE (whe_()) e outras condições em [`CONDIÇÕES`](#Condições)**
+
+____
 
 ## Alterar tabela
 
@@ -366,6 +372,8 @@ Outras alterações na tabela são:
   ```
 
 **Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](#Propiedades)**
+
+____
 
 ## Condições
 
