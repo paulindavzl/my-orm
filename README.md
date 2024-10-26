@@ -19,7 +19,10 @@ ___
 ..........[`Condições`](#Condições): Condições para executar uma consulta SQL <br>
 ....................[`WHERE`](#WHERE): Como utilizar a condição WHERE com as funções da biblioteca. <br>
 ....................[`BETWEEN`](#BETWEEN): Como utilizar a condição BETWEEN com as funções da biblioteca. <br>
-....................[`AND`](#AND): Como usar a condição AND com as funções da biblioteca. <br>**
+....................[`AND`](#AND): Como usar a condição AND com as funções da biblioteca. <br>
+....................[`OR`](#OR): Como usar a condição OR com as funções da biblioteca. <br>
+..........[`Propriedades`](#Propriedades): Propriedades das colunas. <br>
+....................[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>**
 
 ____
 
