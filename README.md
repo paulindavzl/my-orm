@@ -23,7 +23,8 @@ ___
 ....................[`AND`](#AND): Como usar a condição AND com as funções da biblioteca. <br>
 ....................[`OR`](#OR): Como usar a condição OR com as funções da biblioteca. <br>
 ..........[`Propriedades`](#Propriedades): Propriedades das colunas. <br>
-....................[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>**
+....................[`Tipos de dados`](#Tipos-de-dados): Tipos de dados que a coluna armazenará.
+..............................[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>**
 
 ____
 
