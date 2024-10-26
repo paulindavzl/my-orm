@@ -41,7 +41,23 @@ my-orm/
 |    |    |—— sql_commands_create.py
 |    |    |—— sql_commands_prop.py
 |    |
-|    |—— 
+|    |—— utils/
+|    |    |—— __init__.py
+|    |    |—— convert.py
+|    |    |—— validate.py
+|    |    |—— verify_tags.py
+|    |
+|    |—— __init__.py
+|    |—— my_orm.py
+|
+|—— tests/
+|    |—— __init__.py
+|    |—— test_my_orm.py
+|    |—— test_my_orm_exceptions.py
+|    |—— test_sql_commands_alter_table.py
+|    |—— test_sql_commands_cond.py
+|    |—— test_sql_commands_create.py
+|    |—— test_sql_commands_prop.py
 ```
 
 ____
