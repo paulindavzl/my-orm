@@ -178,7 +178,7 @@ orm.add(
 O resultado deste método seria:
 
 ```sql
-INSERTO INTO Users (name, email) VALUES (?, ?);
+INSERT INTO Users (name, email) VALUES (?, ?);
 ```
 
 **OBS: Inserir mais de um registro por vez não alteraria o código `SQL` em si, apenas na hora de executá-lo!**
