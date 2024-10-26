@@ -549,9 +549,13 @@ Propriedades que podem ser atribuídas à colunas ([`tipos de dados`](#Tipos-de-
 
 **Obs: com exceção de [`PRIMARY KEY`](#PRIMARY-KEY), todas propriedades devem estar dentro de uma tupla!**
 
+____
+
 ### Tipos de dados
 
 Indica qual será o tipo de dado que uma coluna receberá.
+
+____
 
 #### INTEGER
 
@@ -566,6 +570,8 @@ orm.make(
 )
 ```
 
+____
+
 #### FLOAT
 
 Definir uma coluna como FLOAT ao criar ou editar uma tabela usa-se `t_float()`:
@@ -575,9 +581,11 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 orm.make(
     "Users",
-    id = (t_float())
+    height = (t_float())
 )
 ```
+
+____
 
 #### DECIMAL
 
@@ -588,14 +596,106 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 orm.make(
     "Users",
-    id = (decimal(10, 9))
+    balance = (decimal(10, 2))
 )
 ```
 
-Nota-se que decimal recebe dois parâmetros: 
+Nota-se que decimal() recebe dois parâmetros: 
 ```python
 decimal(precision: int, scale: int)
 
 # precision: indica quantos dígitos terão no número armazenado
 # scale: indica quantos dígitos terão após o ponto decimal
 ```
+
+____
+
+#### DOUBLE
+
+Definir uma coluna como DOUBLE ao criar ou editar uma tabela usa-se `double()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    weight = (double())
+)
+```
+
+____
+
+#### CHAR
+
+Definir uma coluna como CHAR ao criar ou editar uma tabela usa-se `char()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    cpf = (char(11))
+)
+```
+
+char() recebe um parâmetro:
+```python
+char(length: int)
+
+# length: quantidade fixa de caractéres que terão no dado armazenado
+```
+
+____
+
+#### VARCHAR
+
+Definir uma coluna como VARCHAR ao criar ou editar uma tabela usa-se `varchar()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    name = (varchar(100))
+)
+```
+
+varchar() recebe um parâmetro:
+```python
+varchar(max_length: int)
+
+# max_length: quantidade máxima de caractéres que terão no dado armazenado
+```
+
+____
+
+#### TEXT
+
+Definir uma coluna como TEXT ao criar ou editar uma tabela usa-se `text()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    address = (text())
+)
+```
+
+____
+
+#### BOOLEAN
+
+Definir uma coluna como BOOLEAN ao criar ou editar uma tabela usa-se `boolean()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    address = (boolean())
+)
+```
+
+____
+
