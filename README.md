@@ -14,17 +14,17 @@ ___
 ....[`Criar tabela`](#Criar-tabela): Como criar uma tabela usando métodos da biblioteca (CREATE). <br>
 ....[`Inserir dados`](#Inserir-dados): Como inserir registros em uma tabela usando métodos da biblioteca (INSERT). <br>
 ....[`Selecionar dados`](#Selecionar-dados): Como selecionar dados de uma tabela usando os métodos da biblioteca (SELECT). <br>
-..........[`Atualizar dados`](#Atualizar-dados): Como atualizar e modificar registros de uma tabela usando os métodos da biblioteca (UPDATE). <br>
-..........[`Deletar dados`](#Deletar-dados): Como deletar registros de uma tabela usando métodos da biblioteca (DELETE). <br>
-..........[`Alterar tabela`](#Alterar-tabela): Alterar propriedades das colunas de uma tabela usando os métodos da biblioteca (ALTER TABLE). <br>
-..........[`Condições`](#Condições): Condições para executar uma consulta SQL <br>
-....................[`WHERE`](#WHERE): Como utilizar a condição WHERE com as funções da biblioteca. <br>
-....................[`BETWEEN`](#BETWEEN): Como utilizar a condição BETWEEN com as funções da biblioteca. <br>
-....................[`AND`](#AND): Como usar a condição AND com as funções da biblioteca. <br>
-....................[`OR`](#OR): Como usar a condição OR com as funções da biblioteca. <br>
-..........[`Propriedades`](#Propriedades): Propriedades das colunas. <br>
-....................[`Tipos de dados`](#Tipos-de-dados): Tipos de dados que a coluna armazenará. <br>
-..............................[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>**
+....[`Atualizar dados`](#Atualizar-dados): Como atualizar e modificar registros de uma tabela usando os métodos da biblioteca (UPDATE). <br>
+....[`Deletar dados`](#Deletar-dados): Como deletar registros de uma tabela usando métodos da biblioteca (DELETE). <br>
+....[`Alterar tabela`](#Alterar-tabela): Alterar propriedades das colunas de uma tabela usando os métodos da biblioteca (ALTER TABLE). <br>
+....[`Condições`](#Condições): Condições para executar uma consulta SQL <br>
+........[`WHERE`](#WHERE): Como utilizar a condição WHERE com as funções da biblioteca. <br>
+........[`BETWEEN`](#BETWEEN): Como utilizar a condição BETWEEN com as funções da biblioteca. <br>
+........[`AND`](#AND): Como usar a condição AND com as funções da biblioteca. <br>
+........[`OR`](#OR): Como usar a condição OR com as funções da biblioteca. <br>
+....[`Propriedades`](#Propriedades): Propriedades das colunas. <br>
+........[`Tipos de dados`](#Tipos-de-dados): Tipos de dados que a coluna armazenará. <br>
+............[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>**
 
 ____
 
