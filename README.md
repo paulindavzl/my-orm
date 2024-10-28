@@ -555,8 +555,6 @@ ____
 
 Indica qual será o tipo de dado que uma coluna receberá.
 
-____
-
 #### INTEGER
 
 Definir uma coluna como INTEGER ao criar ou editar uma tabela usa-se `integer()`:
@@ -693,9 +691,104 @@ orm = MyORM(dbs="sqlite", url="./database/dbs.db")
 
 orm.make(
     "Users",
-    address = (boolean())
+    status = (boolean())
 )
 ```
 
 ____
 
+#### DATE
+
+Definir uma coluna como DATE ao criar ou editar uma tabela usa-se `date()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    creation = (date())
+)
+```
+
+____
+
+#### DATETIME
+
+Definir uma coluna como DATETIME ao criar ou editar uma tabela usa-se `datetime()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    creation = (datetime())
+)
+```
+
+____
+
+#### TIMESTAMP
+
+Definir uma coluna como TIMESTAMP ao criar ou editar uma tabela usa-se `timestamp()`:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    creation = (timestamp())
+)
+```
+
+____
+
+### Restrições
+
+Restrições para inserir um novo registro:
+
+#### FOREIGN KEY
+
+Para adicionar uma chave estrangeira usa-se o parâmetro f_key:
+
+```python
+orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Orders",
+    user_id = (integer(), prop("n_null")),
+    id = (integer(), prop("pri_key")),
+    f_key("user_id", "Users(id)")
+)
+```
+
+`f_key` recebe uma tupla onde: <br>
+* O primeiro item é o referenciador.
+* O segundo item é o referenciado, ele é definido por uma string no formato "table(column)".
+
+`f_key` ainda pode receber mais dois itens:
+
+##### ON UPDATE
+
+Podendo ser o terceiro ou quarto item de [`f_key`](#FOREIGN-KEY), ON UPDATE pode ser definido por `on_up()`:
+
+```python
+f_key = ("user_id", "Users(id)", on_up("cascade"))
+```
+
+____
+
+##### ON DELETE
+
+Também podendo ser o terceiro ou quarto item de [`f_key`](#FOREIGN-KEY), ON DELETE pode ser definido por `on_del()`:
+
+```python
+f_key = ("user_id", "Users(id)", on_del("cascade"))
+```
+
+Ambos podem ser usados juntos!
+
+O resultado destas funções seria:
+
+```sql
+FOREIGN KEY user_id REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+```
