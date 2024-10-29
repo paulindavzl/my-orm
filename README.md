@@ -861,3 +861,19 @@ prop("current")
 ```
 
 ____
+
+#### UNIQUE
+
+UNIQUE é passado por `"uni"`:
+
+```python
+prop("uni")
+```
+
+____
+
+É possível passar várias restrições de uma só vez:
+
+```python
+prop("uni", "n_null", default=0)
+```
