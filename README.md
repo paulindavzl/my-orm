@@ -792,3 +792,52 @@ O resultado destas funções seria:
 ```sql
 FOREIGN KEY user_id REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ```
+
+____
+
+#### Outras restrições
+
+As outras restrições são utilizadas usando a função `prop()`:
+
+```python
+orm = my_orm(dbs="sqlite", url="./database/dbs.db")
+
+orm.make(
+    "Users",
+    id = (prop("pri_key"))
+)
+```
+
+**Todos as restrições passadas por `prop()` são abreviadas. Veja:**
+
+____
+
+##### DEFAULT
+
+Default é o único que é passado como parâmetro:
+
+```python
+prop(default="undefined")
+```
+
+____
+
+##### NOT NULL
+
+NOT NULL é passado por `"n_null"`:
+
+```python
+prop("n_null")
+```
+
+____
+
+##### AUTO_INCREMENT
+
+AUTO_INCREMENT é passado por `"auto"`:
+
+```python
+prop("auto")
+```
+
+____
