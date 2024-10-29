@@ -795,7 +795,7 @@ FOREIGN KEY user_id REFERENCES Users(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 ____
 
-#### Outras restrições
+### Outras restrições
 
 As outras restrições são utilizadas usando a função `prop()`:
 
@@ -812,7 +812,7 @@ orm.make(
 
 ____
 
-##### DEFAULT
+#### DEFAULT
 
 Default é o único que é passado como parâmetro:
 
@@ -822,7 +822,7 @@ prop(default="undefined")
 
 ____
 
-##### NOT NULL
+#### NOT NULL
 
 NOT NULL é passado por `"n_null"`:
 
@@ -832,7 +832,7 @@ prop("n_null")
 
 ____
 
-##### AUTO_INCREMENT
+#### AUTO_INCREMENT
 
 AUTO_INCREMENT é passado por `"auto"`:
 
