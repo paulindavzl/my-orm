@@ -841,3 +841,23 @@ prop("auto")
 ```
 
 ____
+
+#### PRIMARY KEY
+
+PRIMARY KEY é passado por `"pri_key"`:
+
+```python
+prop("pri_key")
+```
+
+____
+
+#### CURRENT_TIMESTAMP
+
+CURRENT_TIMESTAMP é passado por `"current"`:
+
+```python
+prop("current")
+```
+
+____
