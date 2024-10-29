@@ -24,7 +24,22 @@ ___
 ........[`OR`](#OR): Como usar a condição OR com as funções da biblioteca. <br>
 ....[`Propriedades`](#Propriedades): Propriedades das colunas. <br>
 ........[`Tipos de dados`](#Tipos-de-dados): Tipos de dados que a coluna armazenará. <br>
-............[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>**
+............[`INTEGER`](#INTEGER): Definir uma coluna como INTEGER. <br>
+............[`FLOAT`](#FLOAT): Definir uma coluna como FLOAT. <br>
+............[`DECIMAL`](#DECIMAL): Definir uma coluna como DECIMAL. <br>
+............[`DOUBLE`](#DOUBLE): Definir uma coluna como DOUBLE. <br>
+............[`CHAR`](#CHAR): Definir uma coluna como CHAR. <br>
+............[`VARCHAR`](#VARCHAR): Definir uma coluna como VARCHAR. <br>
+............[`TEXT`](#TEXT): Definir uma coluna como TEXT. <br>
+............[`BOOLEAN`](#BOOLEAN): Definir uma coluna como BOOLEAN. <br>
+............[`DATE`](#DATE): Definir uma coluna como DATE. <br>
+............[`DATETIME`](#DATETIME): Definir uma coluna como DATETIME. <br>
+............[`TIMESTAMP`](#TIMESTAMP): Definir uma coluna como TIMESTAMP. <br>
+........[`Restrições`](#Restrições): Restrições para colunas. <br>
+............[`FOREIGN KEY`](#FOREIGN-KEY): Definir uma chave estrangeira. <br>
+................[`ON UPDATE`](#ON-UPDATE): Definir evento atualizar a coluna. <br>
+................[`ON DELETE`](#ON-DELETE): Definir evento deletar a coluna. <br>
+............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>**
 
 ____
 
