@@ -928,3 +928,23 @@ Ao instanciar a classe `MyORM()`, é possível definir alguns atributos dependen
 
     # por padrão, return_dict=True
     ```
+
+* require_tags:
+
+    Quando `True` exige que os comandos possuam tags de segurança, o que pode dificultar `injeções de SQL`.
+
+    ```python
+    orm = MyORM(require_tags=True/False)
+
+    # por padrão, require_tags=True
+    ```
+
+* alter_all:
+
+    Quando `False` impede que haja alterações nos registros sem [`Condições`](#Condições).
+
+    ```python
+    orm = MyORM(alter_all=True/False)
+
+    # por padrão, alter_all=False
+    ```
