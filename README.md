@@ -892,3 +892,17 @@ ____
 ```python
 prop("uni", "n_null", default=0)
 ```
+
+____
+
+## Atributos
+
+Ao instanciar a classe `MyORM()`, é possível definir alguns atributos dependendo das necessidades do usuário:
+
+* sql_return:
+
+    Quando `True` etorna o comando SQL que será gerado pela classe.
+
+    ```python
+    orm = MyORM(sql_return=True/False)
+    ```
