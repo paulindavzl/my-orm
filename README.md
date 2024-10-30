@@ -124,15 +124,27 @@ from my_orm import *
 
 Dependendo do SGDB escolhido, a configuração muda:
 
-* SQLITE:
+* SQLite:
 
-```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
-```
+    ```python
+    orm = MyORM(
+        dbs="sqlite", # nome do SGDB
+        path="./database/dbs.db" # caminho para o arquivo
+    )
+    ```
 
-**_dbs_** é o tipo de SGDB
+* MySQL:
 
-**_url_** é o caminho para o arquivo
+    ```python
+    orm = MyORM(
+        dbs="mysql", # nome do SGDB
+        user="root", # nome de usuário
+        password="", # senha de conexão
+        host="localhost", # endereço para o servidor
+        database="database_name" # nome do banco de dados
+    )
+    ```
+
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
