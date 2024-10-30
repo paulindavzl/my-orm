@@ -141,10 +141,12 @@ Dependendo do SGDB escolhido, a configuração muda:
         user="root", # nome de usuário
         password="", # senha de conexão
         host="localhost", # endereço para o servidor
-        database="database_name" # nome do banco de dados
+        database="database_name", # nome do banco de dados
+        port=3306 # porta de conexão (não é obrigatória)
     )
-    ```
 
+    # por padrão, port=3306
+    ```
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
