@@ -68,9 +68,9 @@ def test_method_select(orm):
     
 
 def test_method_update(orm):
-    expected_return = """UPDATE table SET column1 = 'value1' WHERE column2 IN (tag1, tag2);"""
+    expected_return = """UPDATE table SET column1 = 'value1' WHERE column2 IN ('tag1', 'tag2');"""
     
-    resp = orm.edit("table", whe_("column2", ["tag1", "tag2"]), column1="value1").get("sql")
+    resp = orm.edit("table", whe_("column2", "'tag1', 'tag2'"), column1="value1").get("sql")
     assert resp == expected_return
     
 

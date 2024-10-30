@@ -20,7 +20,7 @@ class MyORM:
         self.__ret_sql = sql_return # verifica se há necessidade de retornar os comandos gerados
         self.__exe = execute # varifica se é para executar os comandos gerados
         self.__req_tags = require_tags # quando ativo, aceita somente comandos com tags
-        self.__alter_all = alter_all # quando False impeder alterar dados sem condições
+        self.__alter_all = alter_all # quando False impede alterar dados sem condições
         
         # define qual será o placeholder usado para diferentes bancos de dados
         self.__placeholder = {
@@ -80,7 +80,6 @@ class MyORM:
             raise TypeError(f"(MyORM.make()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
             
         fkey = kwargs.get("f_key")
-        kwargs.pop("f_key")
         if fkey != None and not isinstance(fkey, tuple):
             raise TypeError(f"(MyORM.make()) f_key expected a str value, but received a {type(fkey).__name__} ({fkey}). {doc_link()}")
         elif fkey != None and len(fkey) < 2:
@@ -88,6 +87,7 @@ class MyORM:
             
         f_key = None
         if fkey != None:
+            kwargs.pop("f_key")
             f_key = for_key(
                 fkey[0], 
                 fkey[1], 

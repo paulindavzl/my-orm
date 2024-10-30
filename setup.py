@@ -9,7 +9,7 @@ def read_long_description():
 
 setup(
     name="my_orm",
-    version="0.5.0",
+    version="0.8.0",
     description="Uma ORM simples para facilitar a implementação de SQL com Python",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",

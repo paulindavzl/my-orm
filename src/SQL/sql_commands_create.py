@@ -23,7 +23,6 @@ def decimal(precision: int, scale: int):
     return sql_commands
 
     
-
 def double():
     sql_commands = f"**doub** DOUBLE"
         
