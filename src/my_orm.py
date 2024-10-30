@@ -1,153 +1,136 @@
-"""
-Este módulo realiza a conexão com um banco de dados e facilita a manipulação de comandos SQL!
-
-Classes:
-    - MyORM: classe responsável por gerenciar a conexão com bancos de dados e fornecer métodos para manipulação de comandos SQL
-    
-Methods:
-    - MyORM.make(): cria uma tabela no banco de dados caso ela não exista
-    - MyORM.add(): insere valores em uma tabela
-    - MyORM.get(): retorna registros de uma tabela
-    - MyORM.exe(): executa comandos SQL
-    - MyORM.show(): retornar todos os atributos da classe
-    
-Requirements:
-    - from typing import Optional: suporte para tipos opcionais
-    - from SQL.sql_commands_create import *: funções para criar tabelas
-    - from SQL.sql_commands_prop import *: funções para adicionar propriedades nas tabelas
-    - from SQL.sql_commands_select import *: funções para condicionar SELECT
-    - from SQL.manager import _connect_dbs: função para conectar-se ao banco de dados 
-    - from utils.convert import _to_dict: função que converte dados em listas
-    - from exceptions import errors_method_insert as err_ins, errors_method_create as err_cre, errors_method_select as err_sel
-"""
-
+import webbrowser
+from time import sleep
+from os import system
+from random import uniform
 from typing import Optional as Op
 from SQL.sql_commands_create import *
 from SQL.sql_commands_prop import *
 from SQL.sql_commands_cond import *
+from SQL.sql_commands_alter_table import *
 from SQL.manager import _connect_dbs
+from utils import doc_link
 from utils.convert import _to_dict
-from exceptions import errors_method_insert as err_ins, errors_method_create as err_cre, errors_method_select as err_sel
+from utils.verify_tags import _requirements_tags as _req_tags, _remove_tags
+from utils.validate import _is_valid_dbs_data
 
 class MyORM:
-    """classe geral da ORM, gerencia todos os métodos
-        Attributes:
-            - __dbs_type (Optional[str]): tipo de banco de dados (ex: SQLite, MySQL...)
-            - __dbs_conn_data (Optional[dict]): dados necessários para conectar-se ao banco de dados
-            - __dbs_return (Optional[bool]): caso True, retorna o comando SQL gerado
-            - __exe (Optional[bool]): caso True, executa os comandos gerados
-            - __return_dict (Optional[bool]): quando True, retorna as consultas em dicionários
-            
-        Methods:
-            - make(table_name: str, *args: str): cria uma tabela sempre que não existir
-            - add(self, table_name: str, values: list, *args: str): insere registros em uma tabela
-            - get(self, table_name: str, columns: list, ret_dict: Op[dict]=True, *args: Op[str]): retorna dados de uma tabela
-            - exe(sql_commands: str, values: Optional[list]=None): executa comandos SQL
-            - show(): retorna os atributos da classe
-            - cols_name(table_name: str): retorna o nome das colunas de uma tabela"""
     
-    def __init__(self, dbs_type: Op[str]=None, dbs_connection_data: Op[dict]=None, sql_return: Op[bool]=False, execute: Op[bool]=True, return_dict: Op[bool]=True):
-        self.__dbs_type = dbs_type # tipo de banco de dados (SQLite, MySQL...)
-        self.__dbs_conn_data = dbs_connection_data # dados para conexão com banco de dados (servidor, user...)
-        self.__sql_return = sql_return # verifica se há necessidade de retornar os comandos gerados
+    def __init__(self, sql_return: Op[bool]=False, execute: Op[bool]=True, return_dict: Op[bool]=True, require_tags: Op[bool]=True, alter_all: Op[bool]=False, **dbs_data):
+        self.__dbs_data = dbs_data # dados do banco de dados
+        self.__ret_sql = sql_return # verifica se há necessidade de retornar os comandos gerados
         self.__exe = execute # varifica se é para executar os comandos gerados
-        self.__return_dict = return_dict # quando true, o retorno das consultas serão em dicionário
+        self.__req_tags = require_tags # quando ativo, aceita somente comandos com tags
+        self.__alter_all = alter_all # quando False impede alterar dados sem condições
         
         # define qual será o placeholder usado para diferentes bancos de dados
         self.__placeholder = {
             "sqlite": "?",
             "postgresql": "%s",
             "mysql": "%s"
-        }.get(self.__dbs_type)
+        }.get(self.__dbs_data.get("dbs", "sqlite"))
         
     
-    def show(self):
-        """retorna os atributos da classe"""
-        
+    def show(self):   
         attributes = {
-            "dbs_type": self.__dbs_type,
-            "dbs_connection_data": self.__dbs_conn_data,
-            "sql_return": self.__sql_return,
+            "dbs_data": self.__dbs_data,
+            "sql_return": self.__ret_sql,
             "execute": self.__exe,
-            "placeholder": self.__placeholder
+            "placeholder": self.__placeholder,
+            "require_tags": self.__req_tags,
+            "alter_all": self.__alter_all
         }
         
         return attributes
         
         
-    def exe(self, sql_commands: str, values: Op[list]=None, type_exe="unique"):
-        """executa comandos SQL
-            Args:
-                - sql_commands (str): comandos SQL
-                - values (list): valores que serão adicionados nos comandos SQL. Não são obrigatórios"""
+    def exe(self, sql_commands: str, values: Op[list]=None, type_exe="unique", require_tags=None):
+        if require_tags == None:
+            require_tags = self.__req_tags
         
         if self.__exe:
-            with _connect_dbs(self.__dbs_type, self.__dbs_conn_data) as conn:
-                cursor = conn.cursor()
-                try:
-                    resp = None
-                    if values:
-                        if type_exe == "unique":
-                            resp = cursor.execute(sql_commands, values)
-                        else:
-                            resp = cursor.executemany(sql_commands, values)
-                        
-                        conn.commit()
-                        return resp
-                        
-                    resp = cursor.execute(sql_commands)
-                    return resp
-                    
-                except Exception as err:
-                    print(err)
-                    print(type(err).__name__)
-                cursor.close()
-        
-        
-    def make(self, table_name: str, *args: str) -> str:
-        """cria uma tabela sempre que não existir no banco de dado
-            Args:
-                - table_name (str): nome da tabela que será criada
-                - *args: série de comandos SQL gerado por funções"""
-        
-        # garante que table_name seja uma string
-        if not isinstance(table_name, str):
-            raise err_cre.type_error("table_name", table_name, "str")
+            result = _is_valid_dbs_data(self.__dbs_data)
+            if not result.get("result"):
+                raise ValueError(f"Some information is missing to connect to the database ({result.get('missing')}). {doc_link()}")
             
-        # garante que os valores de *args sejam strings
-        for arg in args:
-            if not isinstance(arg, str):
-                raise err_cre.type_error("*args", arg, "str")
-        
-        values = ",\n".join(args)
-        sql_commands = f"CREATE TABLE IF NOT EXISTS {table_name}(\n{values}\n);"
+            # garante que tenha as tags necessárias caso ativa
+            is_safe = self.__verify_tags(sql_commands, require_tags)
+            if is_safe.get("result", False):
+                sql_commands = is_safe.get("cmd")
+            else:
+                raise ValueError(f"This SQL command is not valid as it does not have security tags! {doc_link()}")
+            
+            with _connect_dbs(self.__dbs_data) as conn:
+                cursor = conn.cursor()
+                resp = None
+                if values:
+                    if type_exe == "unique":
+                        resp = cursor.execute(sql_commands, values)
+                    else:
+                        resp = cursor.executemany(sql_commands, values)
+                        
+                    conn.commit()
+                    return resp
+                        
+                resp = cursor.execute(sql_commands)
+                return resp
+                
+   
+    def make(self, table_name: str, **kwargs): 
+        if not isinstance(table_name, str):
+            raise TypeError(f"(MyORM.make()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
+            
+        fkey = kwargs.get("f_key")
+        if fkey != None and not isinstance(fkey, tuple):
+            raise TypeError(f"(MyORM.make()) f_key expected a str value, but received a {type(fkey).__name__} ({fkey}). {doc_link()}")
+        elif fkey != None and len(fkey) < 2:
+            raise ValueError(f"(MyORM.make()) f_key must have at least 2 values ​​(foreign key + primary key). {doc_link()}")
+            
+        f_key = None
+        if fkey != None:
+            kwargs.pop("f_key")
+            f_key = for_key(
+                fkey[0], 
+                fkey[1], 
+                fkey[2] if len(fkey) >= 3 else "", 
+                fkey[3] if len(fkey) >= 4 else ""
+            )
+        cols = []
+        for key in kwargs:
+            col = key + " " + " ".join(kwargs[key])
+            cols.append(col)
+            
+        values = ", ".join(cols)
+        sql_commands = f"**make** CREATE TABLE IF NOT EXISTS {table_name}({values}){' '+f_key if f_key != None else ''};"
         
         # tenta executar os comandos SQL
-        self.exe(sql_commands)
+        if self.__exe:
+            self.exe(sql_commands)
         
-        if self.__sql_return:
-            return {"sql": sql_commands}
-            
+        if self.__ret_sql:
+            return {"sql": _remove_tags(sql_commands)}
+           
     
-    def add(self, table_name: str, values: list, *args: str) -> str:
-        """insere valores em uma tabela
-            Args:
-                - table_name (str): nome da tabela onde será inserido
-                - values (list): valores que serão inseridos
-                - *args (str): colunas da tabela que serão usadas"""
-        
-        # garante que table_name seja uma string
+    def add(self, table_name: str, **kwargs) -> str:
         if not isinstance(table_name, str):
-            raise err_ins.type_error("table_name", table_name, "str")
+            raise TypeError(f"(MyORM.add()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
+        
+        # verifica se é necessário organizar os dados
+        values, columns = [], []
+        if "columns" in kwargs and "values" in kwargs:
+            col = kwargs["columns"]
+            val = kwargs["values"]
             
-        # garante que values seja uma lista de valores
-        if not isinstance(values, list):
-            raise err_ins.type_error("values", values, "list")
+            if not isinstance(col, list):
+                raise TypeError(f"(MyORM.add()) columns expected a list value, but received a {type(col).__name__} ({col}). {doc_link()}")
+            if not isinstance(val, list):
+                raise TypeError(f"(MyORM.add()) values expected a list value, but received a {type(val).__name__} ({val}). {doc_link()}")
             
-        # garante que *args seja composto por strings
-        for arg in args:
-            if not isinstance(arg, str):
-                raise err_ins.type_error_args(arg)
+            columns = col
+            values = val
+        else:
+            for column in kwargs:
+                columns.append(column)
+                values.append(kwargs[column])
         
         # verifica se serão mais de um registro
         type_exe = "unique"
@@ -156,56 +139,45 @@ class MyORM:
             
             # impede um número diferente de colunas para valores
             for value in values:
-                if len(args) != len(value):
-                    raise err_ins.value_erro(args, value)
+                if len(columns) != len(value):
+                    raise ValueError(f"(MyORM.add()) The number of values ​​in columns ({len(columns)}) and values ({len(values)}) ​​is different! {doc_link()}")
                     
         else:
             # impede um número diferente de colunas para valores
-            if len(args) != len(values):
-                raise err_ins.value_error(args, values)
+            if len(columns) != len(values):
+                raise ValueError(f"(MyORM.add()) The number of values ​​in columns ({len(columns)}) and values ({len(values)}) ​​is different! {doc_link()}")
         
-        placeholders = ", ".join([self.__placeholder for _ in args])
-        columns = ", ".join(args)
-        sql_commands = f"INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
+        placeholders = ", ".join([self.__placeholder for _ in columns])
+        columns = ", ".join(columns)
+        sql_commands = f"**add** INSERT INTO {table_name} ({columns}) VALUES ({placeholders})"
         
         self.exe(sql_commands, values, type_exe)
         
-        if self.__sql_return:
-            return {"sql": adj_(sql_commands)}
+        if self.__ret_sql:
+            return {"sql": _remove_tags(sql_commands)}
             
         
-    def get(self, table_name: str, columns: list, *args: Op[str]):
-        """retorna dados de um banco de dados
-            Args:
-                table_name (str): nome da tabela
-                columns (list): colunas que serão retornadas
-                *args (str): parâmetros extras usados na seleção"""
-        
-        # garante que table_name seja uma string
+    def get(self, table_name: str, columns: Op[list]="all", *args: Op[str], in_dict=True):
         if not isinstance(table_name, str):
-            raise err_sel.type_error("table_name", table_name, "str")
-            
-        # garante que columns seja uma lista
+            raise TypeError(f"(MyORM.get()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
         if not isinstance(columns, list) and columns != "all":
-            raise err_sel.type_error("columns", columns, "list")
-            
-        # garante que os valores de *args sejam str
+            raise TypeError(f"(MyORM.get()) columns expected a list value, but received a {type(columns).__name__} ({columns}). {doc_link()}")
         for arg in args:
             if not isinstance(arg, str):
-                raise err_sel.type_error("*args", arg, "str")
+                raise TypeError(f"(MyORM.get()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
         
         col = "*"
         if columns != "all":
             col = ", ".join(columns)
         
         cond = " "+" ".join(args)
-        sql_commands = adj_(f"SELECT {col} FROM {table_name}{cond}").strip() + ";"
+        sql_commands = f"**get** SELECT {col} FROM {table_name}{cond}".strip() + ";"
         
         result = {}
         if self.__exe:
             resp = self.exe(sql_commands).fetchall()
             
-            if self.__return_dict:
+            if in_dict:
                 if col == "*":
                     columns = self.cols_name(table_name)["resp"]
                     
@@ -215,30 +187,144 @@ class MyORM:
                 result["resp"] = resp
             
         
-        if self.__sql_return:
-            result["sql"] = sql_commands
+        if self.__ret_sql:
+            result["sql"] = _remove_tags(sql_commands)
         
         return result
         
     
     def cols_name(self, table_name: str):
-        """retorna o nome de todas as colunas de uma tabela
-            Args:
-                table_name (str): nome da tabela"""
-                
         if not isinstance(table_name, str):
-            raise TypeError("(cols_name()) table_name requires a string")
+            raise TypeError("(MyORM.cols_name()) table_name requires a string")
             
-        resp = self.exe(f"PRAGMA table_info({table_name});").fetchall()
+        resp = self.exe(f"PRAGMA table_info({table_name});", require_tags=False).fetchall()
         
         columns = []
         for column in resp:
             columns.append(column[1])
         
         return {"resp": columns}
+        
     
+    def edit(self, table_name: str, *args, all: Op[bool]=None, **kwargs):
+        # o atributo all impede que todos os dados sejam editados de uma vez, desde que all=True
+        
+        if all == None:
+            all = self.__alter_all
             
+        if not isinstance(table_name, str):
+            raise TypeError(f"(MyORM.edit()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
+        for arg in args:
+            if not isinstance(arg, str):
+                raise TypeError(f"(MyORM.edit()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
+        if not isinstance(all, bool):
+            raise TypeError(f"(MyORM.edit()) all expected a bool value, but received a {type(all).__name__} ({all}). {doc_link()}")
+        
+        values = []
+        for key in kwargs:
+            values.append(f"{key} = '{kwargs[key]}'")
+        setter = ", ".join(values)
+        
+        cond = " "+" ".join(args)
+        
+        sql_commands = f"**edit** UPDATE {table_name} SET {setter} {cond.strip()};"
+        
+        if not "WHERE" in sql_commands and not all:
+            raise ValueError(f"For security, the WHERE condition is mandatory. {doc_link()}")
+        
+        if self.__exe:
+            self.exe(sql_commands)
+        
+        if self.__ret_sql:
+            return {"sql": _remove_tags(sql_commands)}
+    
+    
+    def __verify_tags(self, cmd: str, require_tags):
+        types = ["SELECT", "CREATE", "DELETE", "UPDATE", "INSERT", "ALTER TABLE"]
+        # caso o atributo require_tags=True
+        if require_tags:
+            cmd_type = None
+            for type in types:
+                if type in cmd[:15] or type in cmd[10:17] or type in cmd[10:21]:
+                    cmd_type = type.lower()
+            
+            if cmd_type == None:
+                return {"result": False}
+            
+            is_safe = _req_tags(cmd, cmd_type)
+            
+            if is_safe.get("result", False):
+                return is_safe
+            return {"result": False}
+        else:
+            return {"result": True, "cmd": _remove_tags(cmd)}
+            
+    
+    def remove(self, table_name: str, *args: str, all: Op[bool]=None):
+        # o atributo all impede que todos os dados sejam editados de uma vez, desde que all=True
+        
+        if all == None:
+            all = self.__alter_all
+        
+        if not isinstance(table_name, str):
+            raise TypeError(f"(MyORM.remove()) table_name expected a str value, but received a {type(table_name).__name__} ({table_name}). {doc_link()}")
+        elif not isinstance(all, bool):
+            raise TypeError(f"(MyORM.remove()) all expected a bool value, but received a {type(all).__name__} ({all}). {doc_link()}")
+        else:
+            for arg in args:
+                if not isinstance(arg, str):
+                    raise TypeError(f"(MyORM.remove()) *args expected a str value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
+            
+        
+        cond = " ".join(args)
+        sql_command = f"**remove** DELETE FROM {table_name} {cond};"
+        
+        if not "WHERE" in sql_command and not all:
+            raise ValueError(f"For security, the WHERE condition is mandatory. {doc_link()}")
+        
+        if self.__exe:
+            self.exe(sql_command)
+                
+        if self.__ret_sql:
+            return {"sql": _remove_tags(sql_command)}
+            
+    
+    def edit_table(self, table_name: str, *args: str):
+        if not isinstance(table_name, str):
+            raise TypeError(f"(MyORM.edit_table()) table_name expected a value str, but received a {type(table_name)} ({table_name}). {doc_link()}")
+        for arg in args:
+            if not isinstance(arg, str) and not isinstance(arg, list):
+                raise TypeError(f"(MyORM.edit_table()) *args expected a str/list value, but received a {type(arg).__name__} ({arg}). {doc_link()}")
+        
+        base_cmd = f"**altab** ALTER TABLE {table_name} "
+        for arg in args:
+            if isinstance(arg, tuple) or isinstance(arg, list):
+                for block in arg:
+                    sql_command = " ".join((base_cmd, block))
+                    if self.__exe:
+                        self.exe(sql_command)
+            else:
+                alt = " ".join(args)
+                sql_command = base_cmd + alt
+                
+                if self.__exe:
+                    self.exe(sql_command)
+                
+                if self.__ret_sql:
+                    return {"sql": _remove_tags(sql_command)}
+                
+                
+                    
+        
+    
 
 # ignore
 def main():
-    print(__doc__)
+    system("clear")
+    print("Documentation for this project is available at: https://github.com/paulindavzl/my-orm.\n Opening...")
+    sleep(uniform(0, 1.5))
+    system("clear")
+    webbrowser.open("https://github.com/paulindavzl/my-orm")
+    sleep(0.5)
+    print("Documentation for this project is available at: https://github.com/paulindavzl/my-orm.")
+    

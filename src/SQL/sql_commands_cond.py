@@ -1,106 +1,72 @@
-"""
-Neste módulo contém os comandos SQL utilizados para condicionar consultas em uma tabela
-
-Note:
-    Este módulo não deve ser acessado diretamente pelo usuário. Não modifique suas funções!
-
-Functions:
-    adj_(cmd): remove as marcações dos comandos
-    whe_(col_name: str, *args: str): para criar comandos WHERE
-    betw_(par1, par2): para adicionar o comando BETWEEN
-    and_(col_name: str, *args: str): para adicionar o comando AND
-    or_(col_name: str, *args: str): para adicionar o comando OR
-    in_(*args): para adiconar o comando IN"""
+from typing import Optional as Op
+from utils import doc_link
     
 
-from exceptions.errors_cmd_cond import type_error
-
-def adj_(cmd):
-    cmd = str(cmd)
-    cmd = cmd.replace("**and**", "")
-    cmd = cmd.replace("**in**", "")
-    cmd = cmd.replace("**or**", "")
-    cmd = cmd.replace("**betw**", "")
-    cmd = cmd.replace("**whe**", "")
+def whe_(condition: str, cond_in: Op[str]=None):
+    """retorna a condição WHERE"""
+    if not isinstance(condition, str):
+        raise TypeError(f"(whe_()) condition expected a str value, but received a {type(condition).__name__} ({condition}). {doc_link()}")
+    if cond_in != None and not isinstance(cond_in, str):
+        raise TypeError(f"(whe_()) cond_in expected a str value, but received a {type(cond_in).__name__} ({cond_in}). {doc_link()}")
     
-    return cmd
-    
-
-def whe_(col_name: str, *args: str) -> str:
-    """adiciona uma condição WHERE na consulta
-        Args:
-            col_name (str): nome da coluna
-            *args (str): condições"""
-            
-    # garante que col_name seja uma string
-    if not isinstance(col_name, str):
-        raise type_error("col_name", col_name, "str", "whe_")
-    
-    cond = " ".join([str(arg) for arg in args])
-    sql_command = f"**whe**WHERE {col_name} {cond}"
+    if cond_in != None:
+        cond = in_(cond_in, "whe_")
+    sql_command = f"**whe** WHERE {condition}{' '+cond if cond_in != None else ''}"
     
     return sql_command
 
 
-def betw_(par1, par2) -> str:
-    """seleciona itens de dentro de um intervalo
-        Args:
-            par1: primeiro parâmetro do intervalo
-            par2: segundo parâmetro do intervalo"""
+def betw_(column: str, par1, par2) -> str:
+    if not isinstance(column, str):
+        raise TypeError(f"(betw_()) column expected a str value, but received a {type(column).__name__} ({column}). {doc_link()}")
     
-    sql_command = f"**betw**BETWEEN {par1} AND {par2}"
+    sql_command = f"**betw** {column} BETWEEN {par1} AND {par2}"
     
     return sql_command
     
 
-def and_(col_name: str, *args: str) -> str:
-    """adiciona uma condição AND na consulta
-        Args:
-            col_name (str): nome da coluna
-            *args (str): condições"""
-            
-    # garante que col_name seja uma string
-    if not isinstance(col_name, str):
-        raise type_error("col_name", col_name, "str", "and_")
+def and_(condition: str, cond_in: Op[str]=None):
+    """retorna a condição AND"""
+    if not isinstance(condition, str):
+        raise TypeError(f"(and_()) condition expected a str value, but received a {type(condition).__name__} ({condition}). {doc_link()}")
+    if cond_in != None and not isinstance(cond_in, str):
+        raise TypeError(f"(and_()) cond_in expected a str value, but received a {type(cond_in).__name__} ({cond_in}). {doc_link()}")
     
-    cond = " ".join([str(arg) for arg in args])
-    
-    if "**in**" in cond:
-        sql_command = f"**and**AND {col_name} {cond}"
+    sql_command = ""
+    if cond_in != None:
+        cond = in_(cond_in, "and_")
+        sql_command = f"**and** AND ({condition} {cond})"
     else:
-        cond = cond.replace("**in**", "")
-        sql_command = f"**and**AND ({col_name} {cond})"
+        sql_command = f"**and** AND {condition}"
     
     return sql_command
 
 
-def or_(col_name: str, *args: str) -> str:
-    """adiciona uma condição OR na consulta
-        Args:
-            col_name (str): nome da coluna
-            *args (str): condições"""
-            
-    # garante que col_name seja uma string
-    if not isinstance(col_name, str):
-        raise type_error("col_name", col_name, "str", "or_")
+def or_(condition: str, cond_in: Op[str]=None):
+    """retorna a condição OR"""
+    if not isinstance(condition, str):
+        raise TypeError(f"(or_()) condition expected a str value, but received a {type(condition).__name__} ({condition}). {doc_link()}")
+    if cond_in != None and not isinstance(cond_in, str):
+        raise TypeError(f"(or_()) cond_in expected a str value, but received a {type(cond_in).__name__} ({cond_in}). {doc_link()}")
     
-    cond = " ".join([str(arg) for arg in args])
-    
-    if "**in**" in cond:
-        sql_command = f"**or**OR {col_name} {cond}"
+    sql_command = ""
+    if cond_in != None:
+        cond = in_(cond_in, "or_")
+        sql_command = f"**or** OR ({condition} {cond})"
     else:
-        cond = cond.replace("**in**", "")
-        sql_command = f"**or**OR ({col_name} {cond})"
+        sql_command = f"**or** OR {condition}"
     
     return sql_command
     
     
-def in_(*args) -> str:
-    """seleciona valores que correspondem a uma lista de valores
-        Args:
-            *args (str): valores que devem conter na consulta"""
+def in_(values: str, funct: Op[str]="in_"):
+    """retorna a condição IN"""
+    if not isinstance(values, str):
+        raise TypeError(f"({funct}()) values expected a str value, but received a {type(values).__name__} ({values}). {doc_link()}")
+    if len(values) < 1:
+        raise ValueError(f"({funct}()) The list of values ​​cannot be empty. See the documentation at https://github.com/paulindavzl/my-orm.")
     
-    values_list = ", ".join(f"'{arg}'" for arg in args)
-    sql_command = f"**in**IN ({values_list})"
+    sql_command = f"**in** IN ({values})"
     
     return sql_command
+
