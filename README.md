@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS
     );
 ```
 
-**Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](#Propiedades)**
+**Veja mais sobre `foreign key` e outras propriedades em [`PROPRIEDADES`](#Propriedades)**
 
 ___
 
