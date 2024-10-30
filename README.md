@@ -901,8 +901,30 @@ Ao instanciar a classe `MyORM()`, é possível definir alguns atributos dependen
 
 * sql_return:
 
-    Quando `True` etorna o comando SQL que será gerado pela classe.
+    Quando `True` retorna o comando SQL que será gerado pela classe.
 
     ```python
     orm = MyORM(sql_return=True/False)
+
+    # por padrão, sql_return=False
+    ```
+
+* execute:
+
+    Quando `False` não executa os comandos gerados.
+
+    ```python
+    orm = MyORM(execute=True/False)
+
+    # por padrão, execute=True
+    ```
+
+* return_dict:
+
+    Quando `True` permite que o método [`SELECT`](#Selecionar-dados) retorne a consulta em formato de dicionário.
+
+    ```python
+    orm = MyORM(return_dict=True/False)
+
+    # por padrão, return_dict=True
     ```
