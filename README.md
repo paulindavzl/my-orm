@@ -393,7 +393,9 @@ ____
 
 ## Condições
 
-As condições desta **ORM** são, no geral, simplificadas para facilitar a organização do script final:
+As condições desta **ORM** são, no geral, simplificadas para facilitar a organização do script final.
+
+Caso o [`atributo`](#Atributos) `alter_all` esteja `True`, uma condição se torna **OBRIGATÓRIA**!
 
 ____
 
