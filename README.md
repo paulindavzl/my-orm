@@ -950,3 +950,44 @@ Ao instanciar a classe `MyORM()`, é possível definir alguns atributos dependen
 
     # por padrão, alter_all=False
     ```
+
+
+___
+
+## Contribuição
+
+Contribuições são bem-vindas! Se você gostaria de ajudar a melhorar a biblioteca MyORM, siga estas etapas:
+
+1. **Fork** o repositório no GitHub.
+2. Crie uma nova branch para sua feature ou correção:
+   ```bash
+   git checkout -b minha-feature
+   ```
+3. Faça suas alterações e adicione testes, se aplicável.
+4. Commit suas alterações:
+   ```bash
+   git commit -m "Descrição da minha feature"
+   ```
+5. **Push** para a branch criada:
+   ```bash
+   git push origin minha-feature
+   ```
+6. Abra um **Pull Request** no repositório original.
+
+### Diretrizes de Contribuição
+
+- Mantenha o código limpo e siga as convenções de estilo do Python (PEP 8).
+- Adicione comentários e documentação ao seu código.
+- Certifique-se de que seus testes sejam abrangentes e funcionais.
+
+___
+
+## Licença
+
+Este projeto é licenciado sob a Licença MIT. Sinta-se à vontade para usar, modificar e distribuir este software de acordo com os termos desta licença.
+
+### Resumo da Licença MIT:
+
+A Licença MIT é uma licença permissiva que permite que outras pessoas façam o que quiserem com seu código, desde que incluam uma cópia da licença original e a renúncia de responsabilidade.
+
+___
