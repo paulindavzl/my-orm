@@ -39,7 +39,7 @@ ___
 ............[`FOREIGN KEY`](#FOREIGN-KEY): Definir uma chave estrangeira. <br>
 ................[`ON UPDATE`](#ON-UPDATE): Definir evento atualizar a coluna. <br>
 ................[`ON DELETE`](#ON-DELETE): Definir evento deletar a coluna. <br>
-............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>**
+............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>
 ................[`DEFAULT`](#DEFAULT): Definir um valor padrão para a coluna. <br>
 ................[`NOT NULL`](#NOT-NULL): Não permitir registros com valores vazios. <br>
 ................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT-ou-SERIAL)
@@ -47,6 +47,7 @@ ___
 ................[`PRIMARY KEY`](#PRIMARY-KEY): Definir uma coluna cujo valor não pode ser repetido e nem vazio. <br>
 ................[`UNIQUE`](#UNIQUE): Definir uma coluna cujo valor não pode ser repetido mas pode ser vazio. <br>
 ................[`Restrições personalizadas`](#Restrições-personalizadas): Adicionar restrições que não são padrão da ORM. <br>
+........[`Atributos`](#Atributos): Atributos que podem ser definos ao instanciar a classe `MyORM` que mudam o comportamento da ORM. <br>**
 
 ## Estrutura
 
