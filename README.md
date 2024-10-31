@@ -116,7 +116,7 @@ $ pip install my-orm[SGDB]
 
 * sqlite - Usa o `sqlite3` como suporte.
 * mysql - Usa o `mysql-connector-python` como suporte.
-* postgres - Usa o `psycopg2-binary` como suporte.
+* postgres - Usa o `pg8000` como suporte.
 
 ____
 
