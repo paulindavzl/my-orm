@@ -42,7 +42,7 @@ ___
 ............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>**
 ................[`DEFAULT`](#DEFAULT): Definir um valor padrão para a coluna. <br>
 ................[`NOT NULL`](#NOT-NULL): Não permitir registros com valores vazios. <br>
-................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT-/-SERIAL)
+................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT-ou-SERIAL)
 : Definir uma coluna que define seu valor com base em uma sequência. <br>
 ................[`PRIMARY KEY`](#PRIMARY-KEY): Definir uma coluna cujo valor não pode ser repetido. <br>
 
@@ -883,7 +883,7 @@ prop("n_null")
 
 ____
 
-#### AUTO_INCREMENT/SERIAL
+#### AUTO_INCREMENT ou SERIAL
 
 AUTO_INCREMENT é passado por `"auto"`:
 
