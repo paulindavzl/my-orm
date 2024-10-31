@@ -1115,7 +1115,7 @@ resp = orm.get(
 print(resp)
 
 
-# retornar registro expecífico de uma tabela
+# retornar registro específico de uma tabela
 resp = orm.get(
     "Clients", # nome da tabela
     
@@ -1128,7 +1128,7 @@ resp = orm.get(
 print(resp)
 
 
-# retornar coluna expecífica de uma tabela
+# retornar coluna específica de uma tabela
 resp = orm.get(
     "Clients", # nome da tabela
     
@@ -1192,8 +1192,6 @@ orm = MyORM(
     host = MYSQL_HOST,
     database = MYSQL_DB
 )
-
-#orm.exe("DROP TABLE Clients;", require_tags=False)
 
 
 # criar uma tabela
