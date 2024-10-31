@@ -42,10 +42,10 @@ ___
 ............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>**
 ................[`DEFAULT`](#DEFAULT): Definir um valor padrão para a coluna. <br>
 ................[`NOT NULL`](#NOT-NULL): Não permitir registros com valores vazios. <br>
-................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT): Definir uma coluna que define seu valor com base em uma sequência. <br>
-................[`PRIMARY KEY`](#PRIMARY-KEY): Definir um valor padrão para a coluna. <br>P
+................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT-/-SERIAL): Definir uma coluna que define seu valor com base em uma sequência. <br>
+................[`PRIMARY KEY`](#PRIMARY-KEY): Definir uma coluna cujo valor não pode ser repetido. <br>
 
-____
+
 
 ## Estrutura
 
@@ -924,14 +924,6 @@ prop("uni")
 
 ____
 
-É possível passar várias restrições de uma só vez:
-
-```python
-prop("uni", "n_null", default=0)
-```
-
-____
-
 #### Restrições personalizadas
 
 É possível passar qualquer outras restrição usando `prop()`.
@@ -949,6 +941,14 @@ BIGSERIAL
 ```
 
 Note que já fica com as letras maiúsculas automaticamente!
+
+____
+
+É possível passar várias restrições de uma só vez:
+
+```python
+prop("uni", "n_null", default=0)
+```
 
 ____
 
