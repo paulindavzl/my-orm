@@ -171,14 +171,14 @@ Dependendo do SGDB escolhido, a configuração muda:
 
     **Obs: É importante notar que utilizar o SGDB do `Postgres` o nome das tabelas em todos os casos devem entre aspas duplas ("table"). Exemplo:**
   
-        ```python
-        orm.make('"Users"'...)
-        orm.get('"Users"'...)
-        orm.edit('"Users"'...)
-        orm.remove('"Users"'...)
-        orm.edit_table('"Users"'...)
-        orm.exe('DROP TABLE "Users";', require_tags=False)
-        ```
+     ```python
+     orm.make('"Users"'...)
+     orm.get('"Users"'...)
+     orm.edit('"Users"'...)
+     orm.remove('"Users"'...)
+     orm.edit_table('"Users"'...)
+     orm.exe('DROP TABLE "Users";', require_tags=False)
+     ```
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
