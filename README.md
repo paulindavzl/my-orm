@@ -44,9 +44,9 @@ ___
 ................[`NOT NULL`](#NOT-NULL): Não permitir registros com valores vazios. <br>
 ................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT-ou-SERIAL)
 : Definir uma coluna que define seu valor com base em uma sequência. <br>
-................[`PRIMARY KEY`](#PRIMARY-KEY): Definir uma coluna cujo valor não pode ser repetido. <br>
-
-
+................[`PRIMARY KEY`](#PRIMARY-KEY): Definir uma coluna cujo valor não pode ser repetido e nem vazio. <br>
+................[`UNIQUE`](#UNIQUE): Definir uma coluna cujo valor não pode ser repetido mas pode ser vazio. <br>
+................[`Restrições personalizadas`](#Restrições-personalizadas): Adicionar restrições que não são padrão da ORM. <br>
 
 ## Estrutura
 
