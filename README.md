@@ -144,9 +144,24 @@ Dependendo do SGDB escolhido, a configuração muda:
         database="database_name", # nome do banco de dados
         port=3306 # porta de conexão (não é obrigatória)
     )
-
-    # por padrão, port=3306
     ```
+
+    Por padrão, para o MySQL **`port=3306`**.
+
+* Postgres:
+
+    ```python
+    orm = MyORM(
+        dbs="postgres", # nome do SGDB
+        user="root", # nome de usuário
+        password="", # senha de conexão
+        host="localhost", # endereço para o servidor
+        database="database_name", # nome do banco de dados
+        port=5432 # porta de conexão (não é obrigatória)
+    )
+    ```
+
+    Por padrão, para o Postgres **`port=5432`**.
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
