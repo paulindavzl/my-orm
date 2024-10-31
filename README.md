@@ -883,7 +883,7 @@ prop("n_null")
 
 ____
 
-#### AUTO_INCREMENT / SERIAL
+#### AUTO_INCREMENT/SERIAL
 
 AUTO_INCREMENT é passado por `"auto"`:
 
