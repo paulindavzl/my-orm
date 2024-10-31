@@ -40,6 +40,10 @@ ___
 ................[`ON UPDATE`](#ON-UPDATE): Definir evento atualizar a coluna. <br>
 ................[`ON DELETE`](#ON-DELETE): Definir evento deletar a coluna. <br>
 ............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>**
+................[`DEFAULT`](#DEFAULT): Definir um valor padrão para a coluna. <br>
+................[`NOT NULL`](#NOT-NULL): Não permitir registros com valores vazios. <br>
+................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT): Definir uma coluna que define seu valor com base em uma sequência. <br>
+................[`PRIMARY KEY`](#PRIMARY-KEY): Definir um valor padrão para a coluna. <br>P
 
 ____
 
@@ -878,13 +882,15 @@ prop("n_null")
 
 ____
 
-#### AUTO_INCREMENT
+#### AUTO_INCREMENT / SERIAL
 
 AUTO_INCREMENT é passado por `"auto"`:
 
 ```python
 prop("auto")
 ```
+
+**Obs: `SQLite` não possui o comando `AUTO_INCREMENT` e caso seja usado com `Postgres` será alterado para `SERIAL` automaticamente.**
 
 ____
 
@@ -923,6 +929,26 @@ ____
 ```python
 prop("uni", "n_null", default=0)
 ```
+
+____
+
+#### Restrições personalizadas
+
+É possível passar qualquer outras restrição usando `prop()`.
+
+```python
+prop("bigserial")
+
+# BIGSERIAL não é um comando padrão da ORM
+```
+
+O retorno seria:
+
+```sql
+BIGSERIAL
+```
+
+Note que já fica com as letras maiúsculas automaticamente!
 
 ____
 
