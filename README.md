@@ -50,7 +50,8 @@ ___
 ........[`Atributos`](#Atributos): Atributos que podem ser definos ao instanciar a classe `MyORM` que mudam o comportamento da ORM. <br>
 ....[`Exemplos de uso`](#Exemplos-de-uso): Exemplos mais completos de como usar a ORM. <br>
 ........[`SQLite`](#SQLite): Exemplos de uso com SQLite. <br>
-........[`MySQL`](#MySQL): Exemplos de uso com MySQL. <br>**
+........[`MySQL`](#MySQL): Exemplos de uso com MySQL. <br>
+........[`Postgres`](#Postgres): Exemplos de uso com Postgres. <br>**
 
 ## Estrutura
 
