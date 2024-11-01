@@ -1480,3 +1480,28 @@ orm.exe('DROP TABLE "Users"', require_tags=False)
 ___
 
 **Todos estes exemplos de usos foram testados e até a versão `1.0.0` estão funcionando corretamente!**
+
+____
+
+## Licença de Uso Livre
+
+Este projeto é 100% livre e pode ser usado, modificado e distribuído por qualquer pessoa para qualquer propósito, sem restrições.
+
+### Termos
+
+1. **Uso e Distribuição**  
+   Você é livre para usar, modificar, distribuir e realizar qualquer outra ação com este projeto, seja para fins comerciais ou pessoais.
+
+2. **Sem Garantias**  
+   Este projeto é fornecido "como está", sem garantias de qualquer tipo, explícitas ou implícitas. Os autores não serão responsáveis por quaisquer danos ou perdas decorrentes do uso deste software.
+
+3. **Atribuição Opcional**  
+   Embora não seja obrigatório, a atribuição ao autor original deste projeto é sempre bem-vinda e apreciada.
+
+### Direitos do Usuário
+
+Todos os direitos são concedidos aos usuários deste projeto, sem qualquer limitação.
+
+---
+
+**Nota**: Esta licença foi criada para ser o mais aberta e permissiva possível. Sinta-se à vontade para usar e modificar conforme necessário.
