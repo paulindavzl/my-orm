@@ -39,9 +39,20 @@ ___
 ............[`FOREIGN KEY`](#FOREIGN-KEY): Definir uma chave estrangeira. <br>
 ................[`ON UPDATE`](#ON-UPDATE): Definir evento atualizar a coluna. <br>
 ................[`ON DELETE`](#ON-DELETE): Definir evento deletar a coluna. <br>
-............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>**
-
-____
+............[`Outras restrições`](#Outras-restrições): Outras restrições. <br>
+................[`DEFAULT`](#DEFAULT): Definir um valor padrão para a coluna. <br>
+................[`NOT NULL`](#NOT-NULL): Não permitir registros com valores vazios. <br>
+................[`AUTO_INCREMENT / SERIAL`](#AUTO_INCREMENT-ou-SERIAL)
+: Definir uma coluna que define seu valor com base em uma sequência. <br>
+................[`PRIMARY KEY`](#PRIMARY-KEY): Definir uma coluna cujo valor não pode ser repetido e nem vazio. <br>
+................[`UNIQUE`](#UNIQUE): Definir uma coluna cujo valor não pode ser repetido mas pode ser vazio. <br>
+................[`Restrições personalizadas`](#Restrições-personalizadas): Adicionar restrições que não são padrão da ORM. <br>
+........[`Atributos`](#Atributos): Atributos que podem ser definos ao instanciar a classe `MyORM` que mudam o comportamento da ORM. <br>
+....[`Exemplos de uso`](#Exemplos-de-uso): Exemplos mais completos de como usar a ORM. <br>
+........[`SQLite`](#SQLite): Exemplos de uso com SQLite. <br>
+........[`MySQL`](#MySQL): Exemplos de uso com MySQL. <br>
+........[`Postgres`](#Postgres): Exemplos de uso com Postgres. <br>
+....[`Licença, termos e direitos`](#Licença-de-Uso-Livre): Licença e termos de uso deste Projeto. <br>**
 
 ## Estrutura
 
@@ -110,7 +121,7 @@ $ pip install my-orm[SGDB]
 
 * sqlite - Usa o `sqlite3` como suporte.
 * mysql - Usa o `mysql-connector-python` como suporte.
-* postgres - Usa o `psycopg2-binary` como suporte.
+* postgres - Usa o `pg8000` como suporte.
 
 ____
 
@@ -124,15 +135,55 @@ from my_orm import *
 
 Dependendo do SGDB escolhido, a configuração muda:
 
-* SQLITE:
+* SQLite:
 
-```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
-```
+    ```python
+    orm = MyORM(
+        dbs="sqlite", # nome do SGDB
+        path="./database/dbs.db" # caminho para o arquivo
+    )
+    ```
 
-**_dbs_** é o tipo de SGDB
+* MySQL:
 
-**_url_** é o caminho para o arquivo
+    ```python
+    orm = MyORM(
+        dbs="mysql", # nome do SGDB
+        user="root", # nome de usuário
+        password="", # senha de conexão
+        host="localhost", # endereço para o servidor
+        database="database_name", # nome do banco de dados
+        port=3306 # porta de conexão (não é obrigatória)
+    )
+    ```
+
+    Por padrão, para o MySQL **`port=3306`**.
+
+* Postgres:
+
+    ```python
+    orm = MyORM(
+        dbs="postgres", # nome do SGDB
+        user="root", # nome de usuário
+        password="", # senha de conexão
+        host="localhost", # endereço para o servidor
+        database="database_name", # nome do banco de dados
+        port=5432 # porta de conexão (não é obrigatória)
+    )
+    ```
+
+    Por padrão, para o Postgres **`port=5432`**.
+
+    **Obs: É importante notar que ao utilizar o SGDB do `Postgres`, nomes de tabelas que possuam letras maiúsculas devem ser passados entre aspas duplas ("Table"). Exemplo:**
+  
+     ```python
+     orm.make('"Users"'...)
+     orm.get('"Users"'...)
+     orm.edit('"Users"'...)
+     orm.remove('"Users"'...)
+     orm.edit_table('"Users"'...)
+     orm.exe('DROP TABLE "Users";', require_tags=False)
+     ```
 
 **OBS: Após a definição do banco de dados, todos os métodos e funções são universais, independente do SGDB escolhido!**
 
@@ -849,13 +900,15 @@ prop("n_null")
 
 ____
 
-#### AUTO_INCREMENT
+#### AUTO_INCREMENT ou SERIAL
 
 AUTO_INCREMENT é passado por `"auto"`:
 
 ```python
 prop("auto")
 ```
+
+**Obs: `SQLite` não possui o comando `AUTO_INCREMENT` e caso seja usado com `Postgres` será alterado para `SERIAL` automaticamente.**
 
 ____
 
@@ -886,6 +939,26 @@ UNIQUE é passado por `"uni"`:
 ```python
 prop("uni")
 ```
+
+____
+
+#### Restrições personalizadas
+
+É possível passar qualquer outras restrição usando `prop()`.
+
+```python
+prop("bigserial")
+
+# BIGSERIAL não é um comando padrão da ORM
+```
+
+O retorno seria:
+
+```sql
+BIGSERIAL
+```
+
+Note que já fica com as letras maiúsculas automaticamente!
 
 ____
 
@@ -951,43 +1024,485 @@ Ao instanciar a classe `MyORM()`, é possível definir alguns atributos dependen
     # por padrão, alter_all=False
     ```
 
+___
+
+## Exemplos de uso
+
+Exemplos mais completos de como usar a ORM:
+
+### SQLite
+
+```python
+from my_orm import * # importa todas a funcionalidades da ORM
+from env import * # importa os dados de configuração do servidor / banco de dados
+from random import randint # importa uma função para aleatorizar registros e evitar conflitos
+
+
+# gera dois valores "aleatórios" e soma-os
+random_value = randint(1000, 9999) + randint(1000, 9999)
+
+
+# configuração da ORM
+orm = MyORM(
+    dbs = "sqlite",
+    path = SQLITE_PATH
+)
+
+
+# criar uma tabela
+orm.make(
+    "Clients", # nome da tabela
+    
+    # colunas = (tipo de dado + restrições)
+    id = (integer(), prop("pri_key")),
+    name = (varchar(100), prop("n_null")),
+    email = (varchar(100), prop("uni", "n_null")),
+    phone = (integer(), prop("uni", "n_null")),
+    password = (varchar(150), prop("n_null")),
+    adress = (text(), prop("n_null")),
+    register_date = (timestamp(), prop(default="current"))
+)
+
+
+# adicionar um registro na tabela
+orm.add(
+    "Clients", # nome da tabela
+    
+    # coluna = valor
+    name = f"Client{random_value}",
+    email = f"client{random_value}@example.com",
+    phone = 100001 + random_value,
+    password = f"client{random_value}",
+    adress = f"st. {random_value}"
+)
+
+
+# adicionar mais de um registro na tabela
+orm.add(
+    "Clients", # nome da tabela
+    
+    # column = lista[colunas]
+    columns = ["name", "email", "phone", "password", "adress"],
+    
+    #values = lista[lista[valores]]
+    values = [
+        [
+            f"{random_value}_Client", 
+            f"{random_value}client@ex.com", 
+            random_value + 100002, 
+            f"{random_value}client", 
+            f"St. {random_value}"
+        ],
+        [
+            f"{random_value + 1}_Client", 
+            f"{random_value + 1}client@ex.com", 
+            random_value + 100003, 
+            f"{random_value + 1}client", 
+            f"St. {random_value + 1}"
+        ],
+        [
+            f"{random_value + 2}_Client", 
+            f"{random_value + 2}client@ex.com", 
+            random_value + 100004, 
+            f"{random_value + 2}client", 
+            f"St. {random_value + 2}"
+        ]
+    ]
+)
+
+
+# retornar todos os registros de uma tabela
+resp = orm.get(
+    "Clients" # nome da tabela
+)
+
+print(resp)
+
+
+# retornar registro específico de uma tabela
+resp = orm.get(
+    "Clients", # nome da tabela
+    
+    "all", # colunas retornadas
+    
+    # condições
+    whe_("id > 1"), and_("id < 10")
+)
+
+print(resp)
+
+
+# retornar coluna específica de uma tabela
+resp = orm.get(
+    "Clients", # nome da tabela
+    
+    # columns = lista[colunas]
+    columns = ["id", "name", "email"]
+)
+print(resp)
+
+
+# atualizar dados de uma tabela
+orm.edit(
+    "Clients", # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id = 1"), or_("name = 'paulindavzl'"),
+    
+    # coluna = novo valor
+    name = "ClientVIP"
+)
+
+
+# deletar dados de uma tabela
+orm.remove(
+    "Clients", # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id > 0")
+)
+
+
+# alterar dados de uma tabela
+orm.edit_table(
+    "Clients", # nome da tabela
+    
+    # alteração
+    rename("Users")
+)
+
+
+# apagar uma tabela do banco de dados (função específica no futuro)
+orm.exe("DROP TABLE Users", require_tags=False)
+```
+
+____
+
+### MySQL
+
+```python
+from my_orm import * # importa todas a funcionalidades da ORM
+from env import * # importa os dados de configuração do servidor / banco de dados
+from random import randint # importa uma função para aleatorizar registros e evitar conflitos
+
+
+# gera dois valores "aleatórios" e soma-os
+random_value = randint(1000, 9999) + randint(1000, 9999)
+
+
+# configuração da ORM
+orm = MyORM(
+    dbs = "mysql",
+    user = MYSQL_USER,
+    password = MYSQL_PASS,
+    host = MYSQL_HOST,
+    database = MYSQL_DB
+)
+
+
+# criar uma tabela
+orm.make(
+    "Clients", # nome da tabela
+    
+    # colunas = (tipo de dado + restrições)
+    id = (integer(), prop("auto", "pri_key")),
+    name = (varchar(100), prop("n_null")),
+    email = (varchar(100), prop("uni", "n_null")),
+    phone = (integer(), prop("uni", "n_null")),
+    password = (varchar(150), prop("n_null")),
+    adress = (text(), prop("n_null")),
+    register_date = (timestamp(), prop(default="current"))
+)
+
+
+# adicionar um registro na tabela
+orm.add(
+    "Clients", # nome da tabela
+    
+    # coluna = valor
+    name = f"Client{random_value}",
+    email = f"client{random_value}@example.com",
+    phone = 100001 + random_value,
+    password = f"client{random_value}",
+    adress = f"st. {random_value}"
+)
+
+
+# adicionar mais de um registro na tabela
+orm.add(
+    "Clients", # nome da tabela
+    
+    # column = lista[colunas]
+    columns = ["name", "email", "phone", "password", "adress"],
+    
+    #values = lista[lista[valores]]
+    values = [
+        [
+            f"{random_value}_Client", 
+            f"{random_value}client@ex.com", 
+            random_value + 100002, 
+            f"{random_value}client", 
+            f"St. {random_value}"
+        ],
+        [
+            f"{random_value + 1}_Client", 
+            f"{random_value + 1}client@ex.com", 
+            random_value + 100003, 
+            f"{random_value + 1}client", 
+            f"St. {random_value + 1}"
+        ],
+        [
+            f"{random_value + 2}_Client", 
+            f"{random_value + 2}client@ex.com", 
+            random_value + 100004, 
+            f"{random_value + 2}client", 
+            f"St. {random_value + 2}"
+        ]
+    ]
+)
+
+
+# retornar todos os registros de uma tabela
+resp = orm.get(
+    "Clients" # nome da tabela
+)
+
+print(resp)
+
+
+# retornar registro específico de uma tabela
+resp = orm.get(
+    "Clients", # nome da tabela
+    
+    "all", # colunas retornadas
+    
+    # condições
+    whe_("id > 1"), and_("id < 10")
+)
+
+print(resp)
+
+
+# retornar coluna específica de uma tabela
+resp = orm.get(
+    "Clients", # nome da tabela
+    
+    # columns = lista[colunas]
+    columns = ["id", "name", "email"]
+)
+print(resp)
+
+
+# atualizar dados de uma tabela
+orm.edit(
+    "Clients", # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id = 1"), or_("name = 'paulindavzl'"),
+    
+    # coluna = novo valor
+    name = "ClientVIP"
+)
+
+
+# deletar dados de uma tabela
+orm.remove(
+    "Clients", # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id > 0")
+)
+
+
+# alterar dados de uma tabela
+orm.edit_table(
+    "Clients", # nome da tabela
+    
+    # alteração
+    rename("Users")
+)
+
+
+# apagar uma tabela do banco de dados (função específica no futuro)
+orm.exe("DROP TABLE Users", require_tags=False)
+```
+
+____
+
+### Postgres
+
+```python
+from my_orm import * # importa todas a funcionalidades da ORM
+from env import * # importa os dados de configuração do servidor / banco de dados
+from random import randint # importa uma função para aleatorizar registros e evitar conflitos
+
+
+# gera dois valores "aleatórios" e soma-os
+random_value = randint(1000, 9999) + randint(1000, 9999)
+
+
+# configuração da ORM
+orm = MyORM(
+    dbs = "postgres",
+    user = POSTGRES_USER,
+    password = POSTGRES_PASS,
+    host = POSTGRES_HOST,
+    database = POSTGRES_DB
+)
+
+
+# criar uma tabela
+orm.make(
+    '"Clients"', # nome da tabela
+    
+    # colunas = (tipo de dado + restrições)
+    id = (prop("auto", "pri_key")),
+    name = (varchar(100), prop("n_null")),
+    email = (varchar(100), prop("uni", "n_null")),
+    phone = (integer(), prop("uni", "n_null")),
+    password = (varchar(150), prop("n_null")),
+    adress = (text(), prop("n_null")),
+    register_date = (timestamp(), prop(default="current"))
+)
+
+
+# adicionar um registro na tabela
+orm.add(
+    '"Clients"', # nome da tabela
+    
+    # coluna = valor
+    name = f"Client{random_value}",
+    email = f"client{random_value}@example.com",
+    phone = 100001 + random_value,
+    password = f"client{random_value}",
+    adress = f"st. {random_value}"
+)
+
+
+# adicionar mais de um registro na tabela
+orm.add(
+    '"Clients"', # nome da tabela
+    
+    # column = lista[colunas]
+    columns = ["name", "email", "phone", "password", "adress"],
+    
+    #values = lista[lista[valores]]
+    values = [
+        [
+            f"{random_value}_Client", 
+            f"{random_value}client@ex.com", 
+            random_value + 100002, 
+            f"{random_value}client", 
+            f"St. {random_value}"
+        ],
+        [
+            f"{random_value + 1}_Client", 
+            f"{random_value + 1}client@ex.com", 
+            random_value + 100003, 
+            f"{random_value + 1}client", 
+            f"St. {random_value + 1}"
+        ],
+        [
+            f"{random_value + 2}_Client", 
+            f"{random_value + 2}client@ex.com", 
+            random_value + 100004, 
+            f"{random_value + 2}client", 
+            f"St. {random_value + 2}"
+        ]
+    ]
+)
+
+
+# retornar todos os registros de uma tabela
+resp = orm.get(
+    '"Clients"' # nome da tabela
+)
+
+print(resp)
+
+
+# retornar registro específico de uma tabela
+resp = orm.get(
+    '"Clients"', # nome da tabela
+    
+    "all", # colunas retornadas
+    
+    # condições
+    whe_("id > 1"), and_("id < 10")
+)
+
+print(resp)
+
+
+# retornar coluna específica de uma tabela
+resp = orm.get(
+    '"Clients"', # nome da tabela
+    
+    # columns = lista[colunas]
+    columns = ["id", "name", "email"]
+)
+print(resp)
+
+
+# atualizar dados de uma tabela
+orm.edit(
+    '"Clients"', # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id = 1"), or_("name = 'paulindavzl'"),
+    
+    # coluna = novo valor
+    name = "ClientVIP"
+)
+
+
+# deletar dados de uma tabela
+orm.remove(
+    '"Clients"', # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id > 0")
+)
+
+
+# alterar dados de uma tabela
+orm.edit_table(
+    '"Clients"', # nome da tabela
+    
+    # alteração
+    rename('"Users"')
+)
+
+
+# apagar uma tabela do banco de dados (função específica no futuro)
+orm.exe('DROP TABLE "Users"', require_tags=False)
+```
 
 ___
 
-## Contribuição
+**Todos estes exemplos de usos foram testados e até a versão `1.0.0` estão funcionando corretamente!**
 
-Contribuições são bem-vindas! Se você gostaria de ajudar a melhorar a biblioteca MyORM, siga estas etapas:
+____
 
-1. **Fork** o repositório no GitHub.
-2. Crie uma nova branch para sua feature ou correção:
-   ```bash
-   git checkout -b minha-feature
-   ```
-3. Faça suas alterações e adicione testes, se aplicável.
-4. Commit suas alterações:
-   ```bash
-   git commit -m "Descrição da minha feature"
-   ```
-5. **Push** para a branch criada:
-   ```bash
-   git push origin minha-feature
-   ```
-6. Abra um **Pull Request** no repositório original.
+## Licença de Uso Livre
 
-### Diretrizes de Contribuição
+Este projeto é 100% livre e pode ser usado, modificado e distribuído por qualquer pessoa para qualquer propósito, sem restrições.
 
-- Mantenha o código limpo e siga as convenções de estilo do Python (PEP 8).
-- Adicione comentários e documentação ao seu código.
-- Certifique-se de que seus testes sejam abrangentes e funcionais.
+### Termos
 
-___
+1. **Uso e Distribuição**  
+   Você é livre para usar, modificar, distribuir e realizar qualquer outra ação com este projeto, seja para fins comerciais ou pessoais.
 
-## Licença
+2. **Sem Garantias**  
+   Este projeto é fornecido "como está", sem garantias de qualquer tipo, explícitas ou implícitas. Os autores não serão responsáveis por quaisquer danos ou perdas decorrentes do uso deste software.
 
-Este projeto é licenciado sob a Licença MIT. Sinta-se à vontade para usar, modificar e distribuir este software de acordo com os termos desta licença.
+3. **Atribuição Opcional**  
+   Embora não seja obrigatório, a atribuição ao autor original deste projeto é sempre bem-vinda e apreciada.
 
-### Resumo da Licença MIT:
+### Direitos do Usuário
 
-A Licença MIT é uma licença permissiva que permite que outras pessoas façam o que quiserem com seu código, desde que incluam uma cópia da licença original e a renúncia de responsabilidade.
+Todos os direitos são concedidos aos usuários deste projeto, sem qualquer limitação.
 
-___
+---
+
+**Nota**: Esta licença foi criada para ser o mais aberta e permissiva possível. Sinta-se à vontade para usar e modificar conforme necessário.

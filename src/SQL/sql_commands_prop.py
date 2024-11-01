@@ -60,9 +60,10 @@ def prop(*args: str, default=None):
     
     commands = []
     for arg in args:
-        commands += [abbreviations.get(arg.lower())]
+        commands += [abbreviations.get(arg.lower(), arg.upper())]
         
     sql_commands += " ".join(filter(None, commands))
         
     return sql_commands
+    
     

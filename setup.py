@@ -9,7 +9,7 @@ def read_long_description():
 
 setup(
     name="my_orm",
-    version="0.8.0",
+    version="1.0.0",
     description="Uma ORM simples para facilitar a implementação de SQL com Python",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",
@@ -22,7 +22,7 @@ setup(
     extras_require={
         'dev': ['pytest==8.3.2'],
         'mysql': ['mysql-connector-python'],
-        'postgres': ['psycopg2-binary'],
+        'postgres': ['pg8000'],
         'sqlite': ['sqlite3'],
     },
     classifiers=[

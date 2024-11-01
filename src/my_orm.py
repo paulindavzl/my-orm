@@ -25,7 +25,7 @@ class MyORM:
         # define qual será o placeholder usado para diferentes bancos de dados
         self.__placeholder = {
             "sqlite": "?",
-            "postgresql": "%s",
+            "postgres": "%s",
             "mysql": "%s"
         }.get(self.__dbs_data.get("dbs", "sqlite"))
         
@@ -59,20 +59,38 @@ class MyORM:
             else:
                 raise ValueError(f"This SQL command is not valid as it does not have security tags! {doc_link()}")
             
+            dbs = self.__dbs_data.get("dbs", "sqlite")
+            
             with _connect_dbs(self.__dbs_data) as conn:
+                
+                if dbs == "postgres":
+                    sql_commands = sql_commands.replace("AUTO_INCREMENT", "SERIAL")
+                
                 cursor = conn.cursor()
                 resp = None
+                
                 if values:
                     if type_exe == "unique":
-                        resp = cursor.execute(sql_commands, values)
+                        cursor.execute(sql_commands, values)
                     else:
-                        resp = cursor.executemany(sql_commands, values)
+                        cursor.executemany(sql_commands, values)
                         
+                else:     
+                    cursor.execute(sql_commands)
+                
+                if dbs == "postgres":
                     conn.commit()
-                    return resp
-                        
-                resp = cursor.execute(sql_commands)
-                return resp
+                    try:
+                        return cursor.fetchall()
+                    except:
+                        return cursor
+                else:
+                    try:
+                        conn.commit()
+                    except:
+                        pass
+                    return cursor.fetchall()
+                
                 
    
     def make(self, table_name: str, **kwargs): 
@@ -96,7 +114,9 @@ class MyORM:
             )
         cols = []
         for key in kwargs:
-            col = key + " " + " ".join(kwargs[key])
+            if isinstance(kwargs[key], str):
+                kwargs[key] = [kwargs[key]]
+            col = key + " " + " ".join(list(kwargs[key]))
             cols.append(col)
             
         values = ", ".join(cols)
@@ -175,12 +195,12 @@ class MyORM:
         
         result = {}
         if self.__exe:
-            resp = self.exe(sql_commands).fetchall()
+            resp = self.exe(sql_commands)
             
             if in_dict:
                 if col == "*":
                     columns = self.cols_name(table_name)["resp"]
-                    
+                
                 res_dict = _to_dict(resp, columns)
                 result["resp"] = res_dict
             else:
@@ -197,11 +217,25 @@ class MyORM:
         if not isinstance(table_name, str):
             raise TypeError("(MyORM.cols_name()) table_name requires a string")
             
-        resp = self.exe(f"PRAGMA table_info({table_name});", require_tags=False).fetchall()
+        dbs = self.__dbs_data.get("dbs", "sqlite")
+        
+        cmd = {
+            "sqlite": f"PRAGMA table_info({table_name});",
+            "mysql": f"SHOW COLUMNS FROM {table_name};",
+            "postgres": f"""SELECT column_name FROM information_schema.columns WHERE table_name = {table_name};"""
+        }
+        
+        index = {
+            "sqlite": 1,
+            "mysql": 0,
+            "postgres": 0
+        }
+        
+        resp = self.exe(cmd.get(dbs).replace('"', "'"), require_tags=False)
         
         columns = []
         for column in resp:
-            columns.append(column[1])
+            columns.append(column[index.get(dbs)])
         
         return {"resp": columns}
         

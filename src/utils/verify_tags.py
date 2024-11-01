@@ -77,4 +77,4 @@ def _requirements_tags(cmd, type):
         if not _have_tag(cmd, tags):
             return {"result": False}
     return {"result": True, "cmd": _remove_tags(cmd)}
-    
+   
