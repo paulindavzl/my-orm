@@ -1044,7 +1044,7 @@ random_value = randint(1000, 9999) + randint(1000, 9999)
 # configuração da ORM
 orm = MyORM(
     dbs = "sqlite",
-    path = SQLITE_PATH,
+    path = SQLITE_PATH
 )
 
 
@@ -1346,10 +1346,7 @@ orm = MyORM(
     user = POSTGRES_USER,
     password = POSTGRES_PASS,
     host = POSTGRES_HOST,
-    database = POSTGRES_DB,
-    
-    execute=True,
-    sql_return=True
+    database = POSTGRES_DB
 )
 
 
