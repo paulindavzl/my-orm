@@ -64,7 +64,7 @@ class MyORM:
             with _connect_dbs(self.__dbs_data) as conn:
                 
                 if dbs == "postgres":
-                    sql_commands = sql_commands.replace("AUTO_INCREMENT", "BIGSERIAL")
+                    sql_commands = sql_commands.replace("AUTO_INCREMENT", "SERIAL")
                 
                 cursor = conn.cursor()
                 resp = None
@@ -76,9 +76,7 @@ class MyORM:
                         cursor.executemany(sql_commands, values)
                         
                 else:     
-                    test = cursor.execute(sql_commands)
-                    print(sql_commands)
-                    print(test)
+                    cursor.execute(sql_commands)
                 
                 if dbs == "postgres":
                     conn.commit()

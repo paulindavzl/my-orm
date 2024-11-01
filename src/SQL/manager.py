@@ -6,11 +6,20 @@ def _import_lib_for(dbs_type: str):
     sql = None
     
     if dbs_type == "sqlite":
-        import sqlite3 as sql
+        try:
+            import sqlite3 as sql
+        except ImportError:
+            raise ImportError(f"It looks like you don't have the 'sqlite3' library installed! Use 'pip install sqlite3' and try again. {doc_link()}")
     elif dbs_type == "mysql":
-        import mysql.connector as sql
+        try:
+            import mysql.connector as sql
+        except ImportError:
+            raise ImportError(f"It looks like you don't have the 'mysql-connector-python' library installed! Use 'pip install mysql-connector-python' and try again. {doc_link()}")
     elif dbs_type == "postgres":
-        import pg8000 as sql
+        try:
+            import pg8000 as sql
+        except ImportError:
+            raise ImportError(f"It looks like you don't have the 'pg8000' library installed! Use 'pip install pg8000' and try again. {doc_link()}")
     else:
         raise ValueError(f"This ORM does not support the SGDB provided ({dbs_type})! {doc_link()}")
         
