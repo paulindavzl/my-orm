@@ -51,7 +51,8 @@ ___
 ....[`Exemplos de uso`](#Exemplos-de-uso): Exemplos mais completos de como usar a ORM. <br>
 ........[`SQLite`](#SQLite): Exemplos de uso com SQLite. <br>
 ........[`MySQL`](#MySQL): Exemplos de uso com MySQL. <br>
-........[`Postgres`](#Postgres): Exemplos de uso com Postgres. <br>**
+........[`Postgres`](#Postgres): Exemplos de uso com Postgres. <br>
+....[`Licensa, termos e direitos`](#Licensa-de-Uso-Livre): Licensa e termos de uso deste Projeto. <br>**
 
 ## Estrutura
 
