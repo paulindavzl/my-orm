@@ -52,7 +52,7 @@ ___
 ........[`SQLite`](#SQLite): Exemplos de uso com SQLite. <br>
 ........[`MySQL`](#MySQL): Exemplos de uso com MySQL. <br>
 ........[`Postgres`](#Postgres): Exemplos de uso com Postgres. <br>
-....[`Licensa, termos e direitos`](#Licensa-de-Uso-Livre): Licensa e termos de uso deste Projeto. <br>**
+....[`Licença, termos e direitos`](#Licença-de-Uso-Livre): Licença e termos de uso deste Projeto. <br>**
 
 ## Estrutura
 
