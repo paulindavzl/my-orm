@@ -1022,6 +1022,8 @@ Ao instanciar a classe `MyORM()`, é possível definir alguns atributos dependen
     # por padrão, alter_all=False
     ```
 
+___
+
 ## Exemplos de uso
 
 Exemplos mais completos de como usar a ORM:
@@ -1172,6 +1174,8 @@ orm.edit_table(
 orm.exe("DROP TABLE Users", require_tags=False)
 ```
 
+____
+
 ### MySQL
 
 ```python
@@ -1320,3 +1324,161 @@ orm.edit_table(
 # apagar uma tabela do banco de dados (função específica no futuro)
 orm.exe("DROP TABLE Users", require_tags=False)
 ```
+
+____
+
+### Postgres
+
+```python
+from my_orm import * # importa todas a funcionalidades da ORM
+from env import * # importa os dados de configuração do servidor / banco de dados
+from random import randint # importa uma função para aleatorizar registros e evitar conflitos
+
+
+# gera dois valores "aleatórios" e soma-os
+random_value = randint(1000, 9999) + randint(1000, 9999)
+
+
+# configuração da ORM
+orm = MyORM(
+    dbs = "postgres",
+    user = POSTGRES_USER,
+    password = POSTGRES_PASS,
+    host = POSTGRES_HOST,
+    database = POSTGRES_DB,
+    
+    execute=True,
+    sql_return=True
+)
+
+
+# criar uma tabela
+orm.make(
+    '"Clients"', # nome da tabela
+    
+    # colunas = (tipo de dado + restrições)
+    id = (prop("auto", "pri_key")),
+    name = (varchar(100), prop("n_null")),
+    email = (varchar(100), prop("uni", "n_null")),
+    phone = (integer(), prop("uni", "n_null")),
+    password = (varchar(150), prop("n_null")),
+    adress = (text(), prop("n_null")),
+    register_date = (timestamp(), prop(default="current"))
+)
+
+
+# adicionar um registro na tabela
+orm.add(
+    '"Clients"', # nome da tabela
+    
+    # coluna = valor
+    name = f"Client{random_value}",
+    email = f"client{random_value}@example.com",
+    phone = 100001 + random_value,
+    password = f"client{random_value}",
+    adress = f"st. {random_value}"
+)
+
+
+# adicionar mais de um registro na tabela
+orm.add(
+    '"Clients"', # nome da tabela
+    
+    # column = lista[colunas]
+    columns = ["name", "email", "phone", "password", "adress"],
+    
+    #values = lista[lista[valores]]
+    values = [
+        [
+            f"{random_value}_Client", 
+            f"{random_value}client@ex.com", 
+            random_value + 100002, 
+            f"{random_value}client", 
+            f"St. {random_value}"
+        ],
+        [
+            f"{random_value + 1}_Client", 
+            f"{random_value + 1}client@ex.com", 
+            random_value + 100003, 
+            f"{random_value + 1}client", 
+            f"St. {random_value + 1}"
+        ],
+        [
+            f"{random_value + 2}_Client", 
+            f"{random_value + 2}client@ex.com", 
+            random_value + 100004, 
+            f"{random_value + 2}client", 
+            f"St. {random_value + 2}"
+        ]
+    ]
+)
+
+
+# retornar todos os registros de uma tabela
+resp = orm.get(
+    '"Clients"' # nome da tabela
+)
+
+print(resp)
+
+
+# retornar registro específico de uma tabela
+resp = orm.get(
+    '"Clients"', # nome da tabela
+    
+    "all", # colunas retornadas
+    
+    # condições
+    whe_("id > 1"), and_("id < 10")
+)
+
+print(resp)
+
+
+# retornar coluna específica de uma tabela
+resp = orm.get(
+    '"Clients"', # nome da tabela
+    
+    # columns = lista[colunas]
+    columns = ["id", "name", "email"]
+)
+print(resp)
+
+
+# atualizar dados de uma tabela
+orm.edit(
+    '"Clients"', # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id = 1"), or_("name = 'paulindavzl'"),
+    
+    # coluna = novo valor
+    name = "ClientVIP"
+)
+
+
+# deletar dados de uma tabela
+orm.remove(
+    '"Clients"', # nome da tabela
+    
+    # condições (por padrão obrigatória / pode ser alterada)
+    whe_("id > 0")
+)
+
+
+# alterar dados de uma tabela
+orm.edit_table(
+    '"Clients"', # nome da tabela
+    
+    # alteração
+    rename('"Users"')
+)
+
+
+# apagar uma tabela do banco de dados (função específica no futuro)
+orm.exe('DROP TABLE "Users"', require_tags=False)
+```
+
+___
+
+**Todos estes exemplos de usos foram testados e até a versão `1.0.0` estão funcionando corretamente!**
