@@ -2,6 +2,8 @@
 
 Biblioteca simples que facilita o desenvolvimento simples de **CRUDs** usando Python.
 
+![LOGO](logo.png)
+
 ___
 
 ## Sumário
@@ -109,13 +111,7 @@ Ou
 $ pip install -e .[SGDB]
 ```
 
-* Utilizando o PIP INSTALL
-
-```bash
-$ pip install my-orm[SGDB]
-```
-
-**Instalar usando `pip install -e .[SGDB]` ou  `pip install my-orm[SGDB]`é recomendado porque a biblioteca se comporta melhor!**
+**Instalar usando `pip install -e .[SGDB]` é mais recomendado já que a biblioteca se comporta melhor!**
 
 **O 'SGDB' é qual sistema será utilizado. Esta biblioteca tem suporte para:**
 
@@ -196,7 +192,7 @@ ____
 Para criar tabelas utiliza-se o método **`MyORM.make()`:**
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 orm.make(
     "Order", # nome da tabela
     id = (integer(), prop("pri_key")), # nome da coluna = tipo/propriedade
@@ -225,7 +221,7 @@ ___
 Para inserir dados em uma tabela, usa-se o método **`MyORM.add()`:**
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 # adicionar somente um registro por vez
 orm.add(
@@ -259,7 +255,7 @@ ____
 Para selecionar dados é utilizado o método **`MyORM.get()`:**
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 # selecionar todas as colunas
 orm.get(
@@ -306,7 +302,7 @@ ____
 Para atualizar dados, é o utilizado o método **`MyORM.edit()`:**
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.edit(
     "Users", # nome da tabela
@@ -343,7 +339,7 @@ ____
 Para deletar dados, usa-se o método **`MyORM.remove()`:**
 
 ```pythom
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.remove(
     "Users", # nome da tabela
@@ -377,7 +373,7 @@ ____
 Para alterar uma tabela (colunas, propriedades...), utiliza-se o método **`MyORM.edit_table`:**
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 # adicionar uma coluna
 orm.edit_table(
@@ -628,7 +624,7 @@ Indica qual será o tipo de dado que uma coluna receberá.
 Definir uma coluna como INTEGER ao criar ou editar uma tabela usa-se `integer()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -643,7 +639,7 @@ ____
 Definir uma coluna como FLOAT ao criar ou editar uma tabela usa-se `t_float()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -658,7 +654,7 @@ ____
 Definir uma coluna como DECIMAL ao criar ou editar uma tabela usa-se `decimal()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -681,7 +677,7 @@ ____
 Definir uma coluna como DOUBLE ao criar ou editar uma tabela usa-se `double()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -696,7 +692,7 @@ ____
 Definir uma coluna como CHAR ao criar ou editar uma tabela usa-se `char()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -718,7 +714,7 @@ ____
 Definir uma coluna como VARCHAR ao criar ou editar uma tabela usa-se `varchar()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -740,7 +736,7 @@ ____
 Definir uma coluna como TEXT ao criar ou editar uma tabela usa-se `text()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -755,7 +751,7 @@ ____
 Definir uma coluna como BOOLEAN ao criar ou editar uma tabela usa-se `boolean()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -770,7 +766,7 @@ ____
 Definir uma coluna como DATE ao criar ou editar uma tabela usa-se `date()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -785,7 +781,7 @@ ____
 Definir uma coluna como DATETIME ao criar ou editar uma tabela usa-se `datetime()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -800,7 +796,7 @@ ____
 Definir uma coluna como TIMESTAMP ao criar ou editar uma tabela usa-se `timestamp()`:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
@@ -819,7 +815,7 @@ Restrições para inserir um novo registro:
 Para adicionar uma chave estrangeira usa-se o parâmetro f_key:
 
 ```python
-orm = MyORM(dbs="sqlite", url="./database/dbs.db")
+orm = MyORM(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Orders",
@@ -868,7 +864,7 @@ ____
 As outras restrições são utilizadas usando a função `prop()`:
 
 ```python
-orm = my_orm(dbs="sqlite", url="./database/dbs.db")
+orm = my_orm(dbs="sqlite", path="./database/dbs.db")
 
 orm.make(
     "Users",
