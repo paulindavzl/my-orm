@@ -29,6 +29,9 @@ class MyORM:
             "mysql": "%s"
         }.get(self.__dbs_data.get("dbs", "sqlite"))
         
+        if self.__dbs_data.get("dbs", "sqlite") == "sqlite":
+            self.exe("PRAGMA foreign_keys = ON", require_tags=False)
+        
     
     def show(self):   
         attributes = {
@@ -105,22 +108,33 @@ class MyORM:
             
         f_key = None
         if fkey != None:
-            kwargs.pop("f_key")
-            f_key = for_key(
-                fkey[0], 
-                fkey[1], 
-                fkey[2] if len(fkey) >= 3 else "", 
-                fkey[3] if len(fkey) >= 4 else ""
-            )
+            if not isinstance(fkey[0], tuple) and not isinstance(fkey[0], list):
+                f_key = for_key(
+                    fkey[0], 
+                    fkey[1], 
+                    fkey[2] if len(fkey) >= 3 else "", 
+                    fkey[3] if len(fkey) >= 4 else ""
+                )
+            else:
+                for item in fkey:
+                    f_key = ", ".join(
+                        [for_key(
+                            item[0], 
+                            item[1], 
+                            item[2] if len(item) >= 3 else "",
+                            item[3] if len(item) >= 4 else ""
+                        )]
+                    )
         cols = []
         for key in kwargs:
-            if isinstance(kwargs[key], str):
-                kwargs[key] = [kwargs[key]]
-            col = key + " " + " ".join(list(kwargs[key]))
-            cols.append(col)
+            if key != "f_key":
+                if isinstance(kwargs[key], str):
+                    kwargs[key] = [kwargs[key]]
+                col = key + " " + " ".join(list(kwargs[key]))
+                cols.append(col)
             
         values = ", ".join(cols)
-        sql_commands = f"**make** CREATE TABLE IF NOT EXISTS {table_name}({values}){' '+f_key if f_key != None else ''};"
+        sql_commands = f"**make** CREATE TABLE IF NOT EXISTS {table_name}({values}{',' + ' '+f_key if f_key != None else ''});"
         
         # tenta executar os comandos SQL
         if self.__exe:

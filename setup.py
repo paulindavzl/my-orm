@@ -8,8 +8,8 @@ def read_long_description():
         return "Descrição longa indisponível."
 
 setup(
-    name="my_orm",
-    version="1.0.0",
+    name="my-orm",
+    version="2.0.3",
     description="Uma ORM simples para facilitar a implementação de SQL com Python",
     long_description=read_long_description(),
     long_description_content_type="text/markdown",

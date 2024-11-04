@@ -52,9 +52,9 @@ def prop(*args: str, default=None):
     # verifica se existe um valor padrão
     if default != None:
         if default in abbreviations:
-            default = f"DEFAULT {abbreviations.get(default)}"
+            default = f"DEFAULT {abbreviations.get(default)} "
         else:
-            default = f"DEFAULT {default}"
+            default = f"DEFAULT {default} "
         sql_commands += default
     
     
